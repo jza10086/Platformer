@@ -1,0 +1,7 @@
+.godot/
+*.tmp
+
+# Local visual QA helpers and captures
+/tests/qa_capture.gd
+/tests/qa_capture.gd.uid
+/screenshots/
