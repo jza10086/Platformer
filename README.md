@@ -1,40 +1,66 @@
-# Cloudstep · 云间跃行
+# Cloudstep · World 1-1
 
-原创 2.5D 横版跳跃小游戏。3D 水平透视侧视镜头、珊瑚色 Cube 角色、云海砖园与阳光庭园。独立项目，不引用或修改其他游戏工程。
+以《Super Mario Bros.》NES 版第一关 **World 1-1 的关卡布局为参考**，制作的 3D 方块横版游戏。默认进入新关卡：统一一格大小的地面、悬空砖和台阶，保留珊瑚色 Cube 主角与纯水平 3D 透视镜头。造型、材质、界面与合成音效均为原创，不包含 ROM、原版贴图、角色精灵、音乐或商标素材。
 
 ## 运行
 
-- 推荐 Godot **4.7.2 stable**（GL Compatibility，Windows / macOS / Linux）。
-- Godot 项目管理器导入本目录 `project.godot`，打开后按 **F6** 运行当前场景或 **F5** 运行项目。
-- 命令行：`godot --path /path/to/CubePlatformer`
-- 无第三方插件、无网络服务、无需额外资产下载。
+- Godot **4.7.2 stable**，GL Compatibility；Windows / macOS / Linux。
+- 导入 `project.godot` 后按 **F5**。默认场景为 `scenes/world11.tscn`。
+- 命令行：`godot --path /path/to/CubePlatformer`。
+- 无插件、无网络服务，无需额外下载资产。
 
 ## 玩法
 
-- **A / D** 或 **左右方向键**：移动。
-- **Space / W / 上方向键**：跳跃；长按更高，松开短跳。
-- 收集金色太阳环，越过沟壑和紫色尖刺，到最右侧的太阳门通关。
-- 中途旗帜是检查点；坠落或碰到尖刺会在最近检查点复活，已收集金币保留且不会重复计数。
-- **Esc** 或右上角暂停图标：暂停/继续；失去窗口焦点时也会自动暂停。
-- 暂停或通关后点击按钮，或按 **R**：从头再来，所有本局状态重置。
-- 实机 HUD 只保留浮动太阳环计数、细关卡进度和暂停图标；操作说明收进暂停界面，没有常驻教学条或调试面板。
+- **A / D 或 ← / →**：左右移动。
+- **Space / W / ↑**：跳跃；长按跳得更高，松开短跳。
+- **Shift / X**：加速跑。
+- 从下方顶问号块领取金币或蘑菇；蘑菇使主角长高，大形态可撞碎普通砖。受击后缩小并短暂无敌，小形态再受击会失去一条生命。
+- 落到敌人头顶可以踩倒；绿色甲壳敌人可踩成壳、踢动，再踩停。星形奖励提供短暂无敌，隐藏奖励增加生命。
+- 站在**第四根水管顶端，按 S / ↓**进入地下金币房；从右侧横管离开，回到第五根水管。
+- 越过三处地面缺口和终点阶梯，碰到旗杆后降旗并走向城堡结算。旗杆奖励随触碰高度变化，剩余时间转化为分数。
+- **Esc / 右上角暂停按钮**：暂停；失去窗口焦点时也暂停。
+- 暂停、失败或通关后点击重新开始，或按 **R**，重置整局。
+- 操作说明只在暂停界面显示。常驻 HUD 只显示分数、金币、关卡、生命、时间和暂停，没有教学条或调试信息。
 
-## 实现与编辑
+## 地图与实现
 
-- `scenes/main.tscn`：主关卡；12 个命名平台均为独立场景树节点，可直接改位置、宽度、深度和厚度。
-- `scenes/player.tscn`、`scripts/player.gd`：CharacterBody3D 物理角色；锁定 Z 平面、加减速、120ms 土狼时间、140ms 跳跃缓冲、可变跳高、落地挤压反馈。
-- `scripts/platform.gd`：`@tool` 模块化砖砌生成器，约 1 单位的砖块与 0.92 单位立方体角色同尺度；地面使用三排错缝砌块及逐块草皮，5 个短平台使用单排悬空砖块。每块砖都是独立变换的真实倒角几何体，前面、顶面、侧面均有接缝；用 MultiMesh 合批，不是覆盖在大土块上的砖纹。
-- 每个平台仍只有一个完整的 BoxShape3D 碰撞体，视觉砖缝不参与分割物理顶面。原有平台横坐标、宽度、着陆高度不变；不会因为砖缝卡住角色。`floating` 可切换悬空砖排，`thickness` 控制排数。
-- `scenes/coin.tscn`、`scripts/coin.gd`：可复用太阳环；Area3D 拾取防重复。
-- 镜头：真正的 Perspective Camera3D，垂直视场角 50°、Z 距离 18，俯仰/偏航/翻滚全部为 0°；高度固定为 1.3（起点角色位于约 55% 画面高度），仅横向平滑跟随，跳跃不产生俯视或上下追镜。近大远小来自真实 3D 投影，远岛、云和山逐层向后退。
-- 平台前沿位于 Z=0.5，与角色正面基本对齐，其余深度向后延伸；脚底与可跳跃边缘清晰一致。低光轴高度令透视主要呈现侧面，起点仅少量顶面，高平台可见底面，不使用倾斜镜头。角色主体为 0.92 × 0.92 × 0.92 的立方体，仅跳跃/着陆时短暂挤压。
-- `scripts/main.gd`：关卡装饰、危险区域、旗帜/终点、UI 与游戏流程。新增金币可修改 `_build_pickups()` 的二维坐标表；危险物可修改 `_build_hazards()`。
-- `scripts/shapes.gd`：原创基础网格、26 面倒角砖块与材质；`scripts/hud_icon.gd`：矢量绘制的太阳环及暂停图标；`scripts/sound.gd`：原创合成音效。
-- `scripts/ui_input.gd`：暂停时仍处理菜单按键的 UI 输入层。
+- `scripts/world11_data.gd`：独立数据驱动地图。以原图 16 像素为一格，0-based X 坐标，地面顶面 Y=0。
+- 地上路线 **208 列**；缺口为 `[69,71)`、`[86,89)`、`[153,155)`；6 根水管、44 个互动块、5 段阶梯、16 个小怪与 1 个甲壳敌人（其中两只小怪位于上方砖台）。旗杆底座在第 198 列，城堡位于第 202–206 列。
+- 地面和台阶每格都是单独的真实 3D 倒角立方体；不使用整片浮岛、不使用半砖错缝。渲染块有细缝，连续地面的碰撞体按区间合并，避免角色卡在砖缝上。
+- `scripts/world11_block.gd`：问号、普通砖、多金币砖和隐藏奖励。可交互块各有独立一格碰撞体。
+- `scripts/world11_player.gd`：0.90³ Cube 小形态、1.80 高成长形态；移动锁定 Z=0，含土狼时间、跳跃缓冲、可变跳高和轻微挤压反馈。
+- `scripts/world11_enemy.gd`、`scripts/world11_item.gd`：敌人激活、踩踏、甲壳与奖励移动。远处敌人在玩家接近后激活；进入地下房时地上敌人冻结。
+- `scripts/world11.gd`：场景生成、金币房、水管转场、生命、计时、旗杆、界面与结果流程。
+- 镜头为真正的 Perspective Camera3D；旋转始终为 0°，不俯视、不环绕，仅水平平滑跟随。垂直视场角 46°、距离 16、高度 5，适配最高 8 格的平台与终点阶梯。跳跃不会上下追镜。
+
+### 实现边界
+
+这是依据地图复建的 3D 方块演绎，**不是逐帧物理仿真或完整原作移植**。跳跃、惯性、碰撞、敌人初始半格位置和旗杆计分做了独立实现；造型与背景重新设计。保留三处成长奖励，但成长后再次领取仍为蘑菇，暂未实现火焰形态/火球；没有原作中点复活逻辑、烟花和跨关切换。失败后从本关开头继续，生命耗尽后可整局重开。地下房保留 19 金币、三层金币排列、砖台及入口/出口路线。
+
+### 布局参考
+
+以下页面用于核对关卡几何和基本机制；参考图片仅在开发时查看，未打包入项目。
+
+- [MarioWiki：World 1-1 地图](https://www.mariowiki.com/File:SMB_NES_World_1-1_Map.png)
+- [NESMaps：World 1-1 标注地图](https://www.nesmaps.com/maps/SuperMarioBrothers/SuperMarioBrosWorld1-1Map.html)
+- [Nintendo：原版说明书](https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf)
+
+注意：部分参考整图右侧附带地下房，不能把该附图当作地上路线的后续列。
 
 ## 测试
 
 在工程目录运行：
+
+```sh
+godot --headless --path . --script res://tests/test_world11_actors.gd
+godot --headless --path . --script res://tests/qa_world11.gd
+godot --headless --path . --script res://tests/qa_world11_route.gd
+godot --headless --path . --script res://tests/qa_world11_bonus.gd
+```
+
+新关的 26 项角色专项与 46 项独立功能检查覆盖地图、网格几何、顶砖奖励、踩怪、成长受击、暂停、地下房与失败重开。整条主路线只用正常移动/跳跃输入跑通，敌人与物理保持启用；地下支线单独验证真实输入收齐 19 枚金币并返回地上。测试失败会返回非零退出码。
+
+原“云上花园”关卡保留在 `scenes/main.tscn`，不作为默认启动关卡；其源文件和原有测试独立保留。可在编辑器打开该场景并按 F6，或运行 `godot --path . res://scenes/main.tscn`。说明见 [旧关卡文档](docs/legacy-garden.md)。
 
 ```sh
 godot --headless --path . --script res://tests/test_game.gd
@@ -43,26 +69,28 @@ godot --headless --path . --script res://tests/test_camera.gd
 godot --headless --path . --script res://tests/test_bricks_ui.gd
 ```
 
-`test_game.gd` 的 19 项检查覆盖着陆、高低跳、加速/制动、Z 平面锁定、土狼时间、跳跃缓冲、金币去重、真实 Esc 输入、暂停冻结、检查点、跌落/尖刺复活、终点及重开。`test_route.gd` 从起点仅用移动和跳跃完成整关，没有位置传送，验证所有必要平台可达。`test_camera.gd` 的 9 项检查覆盖角色垂直构图、零俯角、真实透视、同尺寸近物比远物大超过 2.4 倍、远岛屏幕尺度、精确立方体、平台前沿对齐、固定高度跟随与 Z 平面锁定。`test_bricks_ui.gd` 的 22 项新增检查覆盖独立倒角砖块、视觉边界、连续碰撞、跨砖缝行走、无卡片 HUD、暂停按钮与焦点对比、操作帮助、结算及 1920×1080 / 1280×800 / 960×540 / 640×360 窗口边界。测试以非零退出码报告失败。
-
-可选视觉检查入口：`godot --path . -- --view=middle`，从关卡中段开始观察。该参数仅供开发检查，不在成品界面展示。正常启动始终从起点开始。
+开发截图位置参数：`godot --path . -- --world-view=middle`，另支持 `start`、`stairs`、`end`；这些参数不会出现在游戏界面，正常启动从开头开始。
 
 ## 实机画面
 
-以下图片由 Godot 4.7.2 的原生 OpenGL 渲染直接导出，原图为 1920×1080；没有后期拼合或界面合成。截图分辨率以实际 viewport 输出为准。
+以下画面由 Godot 4.7.2 原生 OpenGL 渲染直接导出，1920×1080；主线截图来自从默认起点以移动/跳跃输入跑通的同一局；地下与暂停为独立原生检查画面，没有后期拼合。
 
-![起点：错缝草皮砌块与浮动 HUD](docs/screenshots/brick-start.png)
+![World 1-1 起点：等尺寸方块与水平透视](docs/screenshots/world11/start.png)
 
-![中段：悬空单排砖块与检查点](docs/screenshots/brick-middle.png)
+![水管区与高低砖块](docs/screenshots/world11/pipes.png)
 
-![暂停：轻量覆盖排版与操作帮助](docs/screenshots/brick-pause.png)
+![双向阶梯与最后一处缺口](docs/screenshots/world11/stairs.png)
 
-![通关：太阳环与用时](docs/screenshots/brick-victory.png)
+![地下金币房](docs/screenshots/world11/bonus.png)
 
-截图辅助脚本 `tests/capture_bricks.gd` 需要有图形显示的 Godot 运行环境（不可使用 `--headless`），用于复现起点、中段、终点、暂停和结算画面；不改变正常游戏入口。默认输出到 Godot 用户数据目录下的 `captures/`，可用 `-- --output=/your/capture/folder` 指定目录。
+![暂停帮助与清晰主按钮](docs/screenshots/world11/pause.png)
+
+![旗杆、城堡与通关结算](docs/screenshots/world11/victory.png)
+
+截图脚本 `tests/qa_world11_capture.gd` 需要图形显示环境；完整路线脚本支持 `-- --render --output=/your/capture/folder` 输出沿途截图。旧云上花园的截图保留在原位置，两套关卡互不覆盖。
 
 ## 资产与许可
 
-所有场景、造型、材质配色、关卡设计与合成音效均为此项目原创；无外部图片、角色或音乐素材。中文 UI 使用未修改的 Noto Sans CJK 字体，文件 `assets/fonts/NotoSansCJK.ttc` 复用自本地已有合法素材；上游 https://github.com/notofonts/noto-cjk ，SIL Open Font License 1.1，完整版权与许可证保留在 `third_party/Noto-LICENSE.txt`。Godot 引擎本身使用 MIT 许可证；本源码包不包含引擎二进制。无 Nintendo / Mario 商标或游戏资产。
+代码和原创 3D 几何、材质、UI、合成音效以 MIT 许可证提供，见 `LICENSE`。本实现不是 Nintendo 官方作品；原作名称及其相关权利属于各权利人，布局参考不意味着对原作内容授予许可。
 
-本项目源码与原创资产以 MIT 许可证提供，见 `LICENSE`。
+中文字体采用未修改的 Noto Sans CJK，使用 SIL Open Font License 1.1；上游 https://github.com/notofonts/noto-cjk ，完整许可证见 `third_party/Noto-LICENSE.txt`。Godot 使用 MIT 许可证，源码仓库不包含引擎二进制。
