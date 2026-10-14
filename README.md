@@ -1,6 +1,6 @@
 # Cloudstep · World 1-1
 
-以《Super Mario Bros.》NES 版第一关 **World 1-1 的关卡布局为参考**，制作的 3D 方块横版游戏。默认进入新关卡：统一一格大小的地面、悬空砖和台阶，保留珊瑚色 Cube 主角与纯水平 3D 透视镜头。造型、材质、界面与合成音效均为原创，不包含 ROM、原版贴图、角色精灵、音乐或商标素材。
+以《Super Mario Bros.》NES 版第一关 **World 1-1 的关卡布局为参考**，制作的 3D 方块横版游戏。默认进入新关卡：统一一格大小的地面、悬空砖和台阶，保留珊瑚色 Cube 主角与纯水平 3D 透视镜头。环境与道具采用 Kenney CC0 模型，玩家与敌人仍保留原有造型；界面和合成音效为原创。不包含 ROM、原版贴图、角色精灵、音乐或商标素材。资产文件、作者、许可证及修改方式见 [ASSET_SOURCES.md](ASSET_SOURCES.md)。
 
 ## 运行
 
@@ -26,7 +26,8 @@
 
 - `scripts/world11_data.gd`：独立数据驱动地图。以原图 16 像素为一格，0-based X 坐标，地面顶面 Y=0。
 - 地上路线 **208 列**；缺口为 `[69,71)`、`[86,89)`、`[153,155)`；6 根水管、44 个互动块、5 段阶梯、16 个小怪与 1 个甲壳敌人（其中两只小怪位于上方砖台）。旗杆底座在第 198 列，城堡位于第 202–206 列。
-- 地面和台阶每格都是单独的真实 3D 倒角立方体；不使用整片浮岛、不使用半砖错缝。渲染块有细缝，连续地面的碰撞体按区间合并，避免角色卡在砖缝上。
+- 地面和台阶每格都是单独的真实 3D 模型，按完整 AABB 适配为相同的 0.982³ 格子；地面上层为草地块，下层及台阶为砖块。不使用整片浮岛、不使用半格偏移。渲染块有细缝，连续地面的碰撞体按区间合并，避免角色卡在砖缝上。
+- `scripts/world11_assets.gd`：Kenney 模型的纯视觉适配与调色；不生成碰撞体。来源与可复现派生工具见 [资产来源清单](ASSET_SOURCES.md)。
 - `scripts/world11_block.gd`：问号、普通砖、多金币砖和隐藏奖励。可交互块各有独立一格碰撞体。
 - `scripts/world11_player.gd`：0.90³ Cube 小形态、1.80 高成长形态；移动锁定 Z=0，含土狼时间、跳跃缓冲、可变跳高和轻微挤压反馈。
 - `scripts/world11_enemy.gd`、`scripts/world11_item.gd`：敌人激活、踩踏、甲壳与奖励移动。远处敌人在玩家接近后激活；进入地下房时地上敌人冻结。
@@ -52,13 +53,14 @@
 在工程目录运行：
 
 ```sh
+godot --headless --path . --script res://tests/qa_world11_assets.gd
 godot --headless --path . --script res://tests/test_world11_actors.gd
 godot --headless --path . --script res://tests/qa_world11.gd
 godot --headless --path . --script res://tests/qa_world11_route.gd
 godot --headless --path . --script res://tests/qa_world11_bonus.gd
 ```
 
-新关的 26 项角色专项与 46 项独立功能检查覆盖地图、网格几何、顶砖奖励、踩怪、成长受击、暂停、地下房与失败重开。整条主路线只用正常移动/跳跃输入跑通，敌人与物理保持启用；地下支线单独验证真实输入收齐 19 枚金币并返回地上。测试失败会返回非零退出码。
+美术适配另有 22 项独立检查，覆盖归一 AABB、全部纹理、地面格子、六根水管、方块状态和奖励模型。新关的 26 项角色专项与 46 项独立功能检查覆盖地图、网格几何、顶砖奖励、踩怪、成长受击、暂停、地下房与失败重开。整条主路线只用正常移动/跳跃输入跑通，敌人与物理保持启用；地下支线单独验证真实输入收齐 19 枚金币并返回地上。测试失败会返回非零退出码。
 
 原“云上花园”关卡保留在 `scenes/main.tscn`，不作为默认启动关卡；其源文件和原有测试独立保留。可在编辑器打开该场景并按 F6，或运行 `godot --path . res://scenes/main.tscn`。说明见 [旧关卡文档](docs/legacy-garden.md)。
 
@@ -85,12 +87,14 @@ godot --headless --path . --script res://tests/test_bricks_ui.gd
 
 ![暂停帮助与清晰主按钮](docs/screenshots/world11/pause.png)
 
-![旗杆、城堡与通关结算](docs/screenshots/world11/victory.png)
+![旗杆与同包砖块、拱门组成的城堡](docs/screenshots/world11/end.png)
+
+![通关结算](docs/screenshots/world11/victory.png)
 
 截图脚本 `tests/qa_world11_capture.gd` 需要图形显示环境；完整路线脚本支持 `-- --render --output=/your/capture/folder` 输出沿途截图。旧云上花园的截图保留在原位置，两套关卡互不覆盖。
 
 ## 资产与许可
 
-代码和原创 3D 几何、材质、UI、合成音效以 MIT 许可证提供，见 `LICENSE`。本实现不是 Nintendo 官方作品；原作名称及其相关权利属于各权利人，布局参考不意味着对原作内容授予许可。
+代码和原创 3D 几何、材质、UI、合成音效以 MIT 许可证提供，见 `LICENSE`。新环境与道具采用 **Kenney Platformer Kit 4.1 / CC0 1.0**，其原始许可证与逐文件 SHA-256 清单已随工程保留；完整来源、用途及改动见 [ASSET_SOURCES.md](ASSET_SOURCES.md)。本实现不是 Nintendo 官方作品；原作名称及其相关权利属于各权利人，布局参考不意味着对原作内容授予许可。
 
 中文字体采用未修改的 Noto Sans CJK，使用 SIL Open Font License 1.1；上游 https://github.com/notofonts/noto-cjk ，完整许可证见 `third_party/Noto-LICENSE.txt`。Godot 使用 MIT 许可证，源码仓库不包含引擎二进制。

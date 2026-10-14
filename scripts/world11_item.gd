@@ -1,6 +1,7 @@
 extends CharacterBody3D
 ## Block rewards with their own motion and single-use pickup handling.
 signal picked_up(mode)
+const ART = preload("res://scripts/world11_assets.gd")
 const GRAVITY := 24.0
 var mode := "mushroom"
 var owner_game: Node
@@ -26,18 +27,9 @@ func _ready() -> void:
 	visual = Node3D.new()
 	add_child(visual)
 	if mode == "star":
-		var core := Shapes.box(visual, Vector3(0, 0.42, 0), Vector3(0.43, 0.43, 0.30), Color("ffe17d"))
-		core.rotation.z = PI / 4.0
-		Shapes.box(visual, Vector3(0, 0.42, 0), Vector3(0.72, 0.16, 0.28), Color("fff0a8"))
-		Shapes.box(visual, Vector3(0, 0.42, 0), Vector3(0.16, 0.72, 0.28), Color("fff0a8"))
+		ART.make(visual,"star",Vector3(0,0.42,0),Vector3(0.72,0.72,0.30))
 	else:
-		var cap_color := Color("76c9a1") if mode == "life" else Color("f1aa64")
-		Shapes.box(visual, Vector3(0, 0.22, 0), Vector3(0.42, 0.44, 0.44), Color("fff0cf"))
-		Shapes.box(visual, Vector3(0, 0.57, 0), Vector3(0.76, 0.30, 0.72), cap_color)
-		Shapes.box(visual, Vector3(-0.18, 0.60, 0.368), Vector3(0.17, 0.12, 0.025), Color("fff1cf"))
-		Shapes.box(visual, Vector3(0.18, 0.60, 0.368), Vector3(0.17, 0.12, 0.025), Color("fff1cf"))
-	for x in [-0.09, 0.09]:
-		Shapes.box(visual, Vector3(x, 0.30, 0.235), Vector3(0.05, 0.09, 0.025), Color("415262"))
+		ART.make(visual,"mushroom-single",Vector3(0,0.36,0),Vector3(0.76,0.72,0.60),"life" if mode == "life" else "")
 
 func _physics_process(delta: float) -> void:
 	if collected:

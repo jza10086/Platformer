@@ -4,6 +4,7 @@ const DATA = preload("res://scripts/world11_data.gd")
 const BLOCK = preload("res://scripts/world11_block.gd")
 const ENEMY = preload("res://scripts/world11_enemy.gd")
 const ITEM = preload("res://scripts/world11_item.gd")
+const ART = preload("res://scripts/world11_assets.gd")
 const UI_FONT = preload("res://assets/fonts/NotoSansCJK.ttc")
 const CAMERA_HEIGHT := 5.0
 const CAMERA_DISTANCE := 16.0
@@ -96,11 +97,16 @@ func _build_level() -> void:
 	var ground := Node3D.new()
 	ground.name = "GroundTiles"
 	level.add_child(ground)
+	var soil_backing := Node3D.new()
+	soil_backing.name = "SoilBacking"
+	ground.add_child(soil_backing)
 	for segment in layout.ground:
+		# Non-colliding earth behind the seams, bounded to each real ground segment.
+		Shapes.box(soil_backing,Vector3((segment.x+segment.y)*0.5,-1.05,-0.46),Vector3(segment.y-segment.x,2.08,0.05),Color("90543a"))
 		for x in range(segment.x,segment.y):
 			for y in [-1,-2]:
 				var shade: Color = [Color("c98c54"),Color("c88a51"),Color("d49459")][posmod(x+y,3)]
-				tile_mesh(ground,Vector3(x+0.5,y+0.5,0),shade)
+				tile_mesh(ground,Vector3(x+0.5,y+0.5,0),shade,"block-grass" if y == -1 else "brick")
 		_static_box(ground,Vector3((segment.x+segment.y)*0.5,-1,0),Vector3(segment.y-segment.x,2,1))
 	var stairs_root := Node3D.new()
 	stairs_root.name = "StairTiles"
@@ -129,16 +135,10 @@ func _build_level() -> void:
 	_scenery()
 	_goal()
 	_build_underground()
-func tile_mesh(parent: Node, point: Vector3, color: Color) -> MeshInstance3D:
-	var mesh := MeshInstance3D.new()
-	mesh.mesh = cube_mesh
-	mesh.position = point
-	mesh.scale = Vector3.ONE*0.982
-	var key := color.to_html()
-	if not material_cache.has(key): material_cache[key] = Shapes.material(color)
-	mesh.material_override = material_cache[key]
-	parent.add_child(mesh)
-	return mesh
+func tile_mesh(parent: Node, point: Vector3, color: Color, asset := "brick") -> MeshInstance3D:
+	# Every terrain module still has the same 0.982-unit grid footprint.
+	var variant := "stone" if color == Color("637d90") else ""
+	return ART.make(parent,asset,point,Vector3.ONE*0.982,variant)
 func _static_box(parent: Node, point: Vector3, size: Vector3) -> StaticBody3D:
 	var body := StaticBody3D.new()
 	body.collision_layer = 2
@@ -156,39 +156,43 @@ func _pipe(x: int, height: int) -> void:
 	root.name = "Pipe_%d" % x
 	root.position = Vector3(x+1,0,0)
 	level.add_child(root)
-	var body := Shapes.cylinder(root,Vector3(0,(height-0.30)*0.5,0),0.85,height-0.30,Color("318d58"))
-	body.mesh.radial_segments = 24
-	var rim := Shapes.cylinder(root,Vector3(0,height-0.20,0),1.0,0.40,Color("54ac61"))
-	rim.mesh.radial_segments = 24
-	var hole := Shapes.cylinder(root,Vector3(0,height+0.003,0),0.75,0.012,Color("174c3b"))
-	hole.mesh.radial_segments = 24
+	ART.make(root,"pipe",Vector3(0,height*0.5,0),Vector3(2,height,1.2),"pipe",float(height))
 	_static_box(root,Vector3(0,height*0.5,0),Vector3(2,height,1.2))
 func _scenery() -> void:
 	var decoration := Node3D.new()
 	decoration.name = "Background"
 	level.add_child(decoration)
-	for x in [-2,17,42,65,90,114,137,162,187,211]:
+	# Quiet, low-contrast distant silhouettes preserve readable gaps and jumps.
+	for x in [-2,22,47,72,97,122,147,172,197,222]:
 		var big := posmod(x,3) != 0
-		var mound := Shapes.sphere(decoration,Vector3(x,-1.2,-6),Vector3(8 if big else 5,7 if big else 4,3),Color("6baf71"))
+		var mound := Shapes.sphere(decoration,Vector3(x,-2.0,-10),Vector3(14 if big else 10,9 if big else 6,3),Color("88beb0"))
 		mound.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		for dot in [-0.6,0.6]:
-			Shapes.box(decoration,Vector3(x+dot,1.3 if big else 0.35,-4.52),Vector3(0.14,0.30,0.07),Color("418a65"))
-	for x in [9,28,48,69,88,110,131,151,174,195,216]:
+		mound.material_override.disable_receive_shadows = true
+	for x in [8,32,57,81,106,131,156,181,206]:
 		for i in 3:
-			var cloud := Shapes.box(decoration,Vector3(x+i*1.5,8.2+sin(i*1.7)*0.45,-9),Vector3(2.2,1.1,1.1),Color("f4f5e7"))
+			var cloud := Shapes.box(decoration,Vector3(x+i*1.5,8.7+sin(i*1.7)*0.45,-10),Vector3(2.2,1.1,1.1),Color("edf4e6"))
 			cloud.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			cloud.material_override.disable_receive_shadows = true
+	for x in [10,34,53,76,98,119,141,165,190]:
+		var tree := ART.make(decoration,"tree",Vector3(x,2.15,-5.4),Vector3(2.4,4.3,2.4),"distant")
+		tree.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		var pine := ART.make(decoration,"tree-pine-small",Vector3(x+3.0,1.2,-5.8),Vector3(1.25,2.4,1.25),"distant")
+		pine.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	for x in [13,24,55,73,96,121,145,172,193]:
-		for i in 3:
-			var bush := Shapes.sphere(decoration,Vector3(x+i*0.75,0.28,-2.4),Vector3(1.45,1.15+sin(i)*0.35,0.9),Color("63a968"))
-			bush.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		var hedge := ART.make(decoration,"hedge",Vector3(x,0.36,-2.4),Vector3(3.0,0.72,0.65))
+		hedge.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		ART.make(decoration,"flowers",Vector3(x-2.0,0.22,-1.4),Vector3(0.60,0.44,0.35))
+		ART.make(decoration,"rocks",Vector3(x+2.0,0.30,-2.7),Vector3(0.85,0.60,0.65))
+	# Align scenery feet with the projected Y=0 ground despite their rear depth.
+	# Camera remains at zero pitch/yaw/roll; background receives no collision.
 	for mesh in decoration.get_children():
-		if mesh is MeshInstance3D:
-			mesh.material_override.disable_receive_shadows = true
+		if mesh is MeshInstance3D and mesh.has_meta("source_asset"):
+			mesh.position.y += mesh.position.z * CAMERA_HEIGHT / CAMERA_DISTANCE
 func _goal() -> void:
 	Shapes.cylinder(level,Vector3(198.5,5.5,0),0.045,9,Color("e7dfb5"))
 	Shapes.sphere(level,Vector3(198.5,10.06,0),Vector3.ONE*0.25,Color("e9be50"))
-	flag = Shapes.box(level,Vector3(197.85,9.3,0),Vector3(1.25,0.72,0.06),Color("f3e8c8"))
-	Shapes.box(flag,Vector3(0,0,0.04),Vector3(0.22,0.22,0.02),Color("54a782")).rotation.z = PI/4
+	flag = ART.make(level,"flag-cloth",Vector3(197.85,9.3,0),Vector3(1.25,0.72,0.10))
+	flag.rotation.y = PI
 	var castle := Node3D.new()
 	castle.name = "Castle"
 	level.add_child(castle)
@@ -199,6 +203,7 @@ func _goal() -> void:
 	for x in [202,204,206]: tile_mesh(castle,Vector3(x+0.5,3.5,-0.5),Color("c9915b"))
 	for x in [203,204,205]: tile_mesh(castle,Vector3(x+0.5,4.5,-0.9),Color("c9915b"))
 	Shapes.box(castle,Vector3(204.5,1,-1.05),Vector3(1,2,0.1),Color("3e4650"))
+	ART.make(castle,"door-open",Vector3(204.5,1.05,0.06),Vector3(1.32,2.1,0.26))
 	for x in [203.5,205.5]: Shapes.box(castle,Vector3(x,2.6,0.02),Vector3(0.30,0.52,0.03),Color("4d4e49"))
 func _build_underground() -> void:
 	var room := Node3D.new()
@@ -223,8 +228,8 @@ func _build_underground() -> void:
 		for x in range(304,311):
 			if row == 7.5 and x in [304,310]: continue
 			_room_coin(room,Vector3(x+0.5,row,0))
-	Shapes.box(room,Vector3(313.8,1.0,0),Vector3(2.0,2.0,1.1),Color("3c9666"))
-	Shapes.box(room,Vector3(312.75,1.0,0),Vector3(0.35,2.3,1.3),Color("64b77a"))
+	var exit_pipe := ART.make(room,"pipe",Vector3(313.8,1.0,0),Vector3(2.0,2.0,1.1),"pipe",2.0)
+	exit_pipe.rotation.z = PI/2
 	_static_box(room,Vector3(314.25,1,0),Vector3(1.5,2,1.1))
 func _room_coin(parent: Node, point: Vector3) -> void:
 	var area := Area3D.new()
@@ -237,8 +242,7 @@ func _room_coin(parent: Node, point: Vector3) -> void:
 	var col := CollisionShape3D.new()
 	col.shape = shape
 	area.add_child(col)
-	var mesh := Shapes.cylinder(area,Vector3.ZERO,0.27,0.10,Color("ffd66f"))
-	mesh.rotation.x = PI/2
+	ART.make(area,"coin-gold",Vector3.ZERO,Vector3(0.54,0.54,0.18))
 	area.body_entered.connect(func(body: Node):
 		if body == player:
 			add_coin()
@@ -286,8 +290,7 @@ func spawn_item(kind: String, point: Vector3) -> void:
 	level.add_child(item)
 	Sound.play(self,430,0.22,700,-25)
 func coin_pop(point: Vector3) -> void:
-	var coin := Shapes.cylinder(level,point,0.26,0.10,Color("ffe081"))
-	coin.rotation.x = PI/2
+	var coin := ART.make(level,"coin-gold",point,Vector3(0.52,0.52,0.18))
 	var t := create_tween()
 	t.tween_property(coin,"position:y",point.y+1.5,0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	t.tween_property(coin,"position:y",point.y+0.5,0.17)

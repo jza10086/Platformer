@@ -1,0 +1,162 @@
+{
+  "package": "Kenney Platformer Kit",
+  "version": "4.1",
+  "author": "Kenney",
+  "official_page": "https://kenney.nl/assets/platformer-kit",
+  "download_url": "https://kenney.nl/media/pages/assets/platformer-kit/1585cf62b4-1775122253/kenney_platformer-kit.zip",
+  "downloaded_utc": "2026-10-14",
+  "license": "CC0-1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "archive_bytes": 4640135,
+  "archive_sha256": "899605d237367688c6b42e41fff2206c0fb8d626163158294556353f7baa7c1b",
+  "files": [
+    {
+      "path": "License.txt",
+      "bytes": 703,
+      "sha256": "e1185354d8f0f055c325c7204602326c8cf0c47ee5ae1db7ed16f0465b91bb9a",
+      "role": "Unmodified upstream license",
+      "origin": "upstream-unmodified",
+      "upstream_path": "License.txt"
+    },
+    {
+      "path": "Models/Textures/colormap.png",
+      "bytes": 11140,
+      "sha256": "439dfcac935cfd75dc16f28333a4c8284fffcc4b24f857c61cfb4c8a964a15bd",
+      "role": "Shared unmodified palette texture",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/Textures/colormap.png"
+    },
+    {
+      "path": "Models/block-grass.glb",
+      "bytes": 10192,
+      "sha256": "8cd2f9ec083b2b7cfe89d95c53ef8adf369d1e5e6adf125f063122d4998c336f",
+      "role": "Overworld ground upper row",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/block-grass.glb"
+    },
+    {
+      "path": "Models/brick.glb",
+      "bytes": 22412,
+      "sha256": "b1638210ac5584f5d050654d3635b39834542b4121f6095f75b98e28745a23b3",
+      "role": "Ground lower row, stairs, interactive bricks, castle and underground masonry",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/brick.glb"
+    },
+    {
+      "path": "Models/coin-gold.glb",
+      "bytes": 10608,
+      "sha256": "cf2179e57721b943d88283d38678c4b1b8422e9a4dd44f631acfb35007c223a8",
+      "role": "Popping and collectible coins",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/coin-gold.glb"
+    },
+    {
+      "path": "Models/crate-item.glb",
+      "bytes": 13684,
+      "sha256": "77f1d71ae94d7912dc241978fb63f7fbc7ab97b74aee9adc004c7ee6f711a265",
+      "role": "Question and used reward blocks",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/crate-item.glb"
+    },
+    {
+      "path": "Models/door-open.glb",
+      "bytes": 7092,
+      "sha256": "a14487caa5adf4a5311669efb348700975c704a0ca1b129858f86bca1f7f1cfd",
+      "role": "Castle archway",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/door-open.glb"
+    },
+    {
+      "path": "Models/flag-cloth.glb",
+      "bytes": 2868,
+      "sha256": "34788ea98cb68108833975206d90fa25e04fef02711193dfa57841d877bbbc59",
+      "role": "Derived descending finish flag",
+      "origin": "derived",
+      "upstream_path": null,
+      "derived_from": "flag.glb",
+      "generator": "tools/derive_platformer_assets.py"
+    },
+    {
+      "path": "Models/flag.glb",
+      "bytes": 11396,
+      "sha256": "41dc8355080ed9f73adeefa7befaec44b6956ba1353c23bc9ff73d97a53fc143",
+      "role": "Unmodified source for deterministic flag-cloth extraction",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/flag.glb"
+    },
+    {
+      "path": "Models/flowers.glb",
+      "bytes": 25928,
+      "sha256": "c4d459bf014a534a79a6763e59d9c548902600fe0e0e025654bd58a979139be6",
+      "role": "Background flowers",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/flowers.glb"
+    },
+    {
+      "path": "Models/hedge.glb",
+      "bytes": 8916,
+      "sha256": "7927efad067ca6ff76cc09d5e88de4e7f8e32e464456bfbeac32df106f2c00a8",
+      "role": "Background hedges",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/hedge.glb"
+    },
+    {
+      "path": "Models/mushroom-single.glb",
+      "bytes": 5808,
+      "sha256": "2f3ea99fb85c638684c2a039eb4925cdb6de1cecefd8e3678edf9cd9af902fdb",
+      "role": "Derived growth and extra-life pickup",
+      "origin": "derived",
+      "upstream_path": null,
+      "derived_from": "mushrooms.glb",
+      "generator": "tools/derive_platformer_assets.py"
+    },
+    {
+      "path": "Models/mushrooms.glb",
+      "bytes": 13728,
+      "sha256": "81971dad14f9947d70897f1f76d7b3e723b7ee3737a32274ed8cc0355ea55c66",
+      "role": "Unmodified source for deterministic single-mushroom extraction",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/mushrooms.glb"
+    },
+    {
+      "path": "Models/pipe.glb",
+      "bytes": 20252,
+      "sha256": "458af425a9f341fc52a36ff1d713926162efeda503b1509ca24299a782f467d8",
+      "role": "Overworld pipes and underground horizontal exit",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/pipe.glb"
+    },
+    {
+      "path": "Models/rocks.glb",
+      "bytes": 9556,
+      "sha256": "40a7cb558466510ca1976b0e007e351e53c89ac6b61f0b6a277b3226026c3326",
+      "role": "Background rocks",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/rocks.glb"
+    },
+    {
+      "path": "Models/star.glb",
+      "bytes": 6268,
+      "sha256": "a102a1b961fe0932c98ca29200ee6becae711b42437f14d58703388114eeff3c",
+      "role": "Invincibility pickup",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/star.glb"
+    },
+    {
+      "path": "Models/tree-pine-small.glb",
+      "bytes": 22440,
+      "sha256": "951e285d4f49f0863cc8ca2c6dc0fecbd4c25632405c9fe6d6784cd8fdc8928c",
+      "role": "Distant pine trees",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/tree-pine-small.glb"
+    },
+    {
+      "path": "Models/tree.glb",
+      "bytes": 42680,
+      "sha256": "632eb83a4359afd110594ea6f69db4db0c9512c79ae2c88741cf68e527253e41",
+      "role": "Distant broadleaf trees",
+      "origin": "upstream-unmodified",
+      "upstream_path": "Models/GLB format/tree.glb"
+    }
+  ]
+}

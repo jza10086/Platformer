@@ -1,0 +1,2 @@
+# Keep the upstream CC0 notice byte-for-byte, including its original CRLF spacing.
+assets/kenney/platformer-kit/License.txt -text -whitespace

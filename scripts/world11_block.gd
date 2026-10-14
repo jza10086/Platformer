@@ -31,26 +31,20 @@ func _draw() -> void:
 	for node in visual.get_children():
 		visual.remove_child(node)
 		node.queue_free()
-	var color := Color("d58c49") if kind == "brick" else Color("dca62c")
-	if used: color = Color("9b7958")
-	owner_game.tile_mesh(visual,Vector3.ZERO,color)
-	if kind == "brick" and not used:
-		for yy in [-0.16,0.17]:
-			Shapes.box(visual,Vector3(0,yy,0.496),Vector3(0.92,0.028,0.012),Color("744931"))
-		for v in [Vector2(0,0.33),Vector2(-0.23,0),Vector2(0.23,0),Vector2(0,-0.33)]:
-			Shapes.box(visual,Vector3(v.x,v.y,0.496),Vector3(0.028,0.28,0.012),Color("744931"))
-	elif not used:
+	if used:
+		owner_game.ART.make(visual,"crate-item",Vector3.ZERO,Vector3.ONE*0.982,"used")
+	elif kind == "brick":
+		owner_game.ART.make(visual,"brick",Vector3.ZERO,Vector3.ONE*0.982)
+	else:
+		owner_game.ART.make(visual,"crate-item",Vector3.ZERO,Vector3.ONE*0.982)
 		var label := Label3D.new()
 		label.text = "?"
 		label.font_size = 78
-		label.pixel_size = 0.010
+		label.pixel_size = 0.008
 		label.outline_size = 0
-		label.modulate = Color("76502b")
-		label.position = Vector3(0,-0.015,0.51)
+		label.modulate = Color("704021")
+		label.position = Vector3(0,-0.015,0.503)
 		visual.add_child(label)
-	for xx in [-0.35,0.35]:
-		for yy in [-0.35,0.35]:
-			Shapes.box(visual,Vector3(xx,yy,0.502),Vector3(0.045,0.045,0.018),Color("8b6138"))
 func bump(actor: Node) -> void:
 	if used or bumping: return
 	if hidden:
