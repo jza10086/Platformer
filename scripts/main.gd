@@ -16,7 +16,10 @@ var deaths := 0
 var coin_label: Label
 var progress: ProgressBar
 var toast: Label
-var tutorial: PanelContainer
+var pause_button: Button
+var overlay_eyebrow: Label
+var help_text: Label
+var menu_column: VBoxContainer
 var overlay: ColorRect
 var heading: Label
 var detail: Label
@@ -47,12 +50,6 @@ func _ready() -> void:
 			player.reset_at(Vector3(49,0.1,0))
 			camera.position.x = 53
 			elapsed = 20
-			tutorial.hide()
-	get_tree().create_timer(7.0).timeout.connect(func():
-		if is_instance_valid(tutorial):
-			var t := create_tween()
-			t.tween_property(tutorial,"modulate:a",0.0,0.7)
-			t.tween_callback(tutorial.hide))
 func _setup_inputs() -> void:
 	var actions := {"move_left":[KEY_A,KEY_LEFT],"move_right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"pause":[KEY_ESCAPE],"restart":[KEY_R]}
 	for action in actions:
@@ -178,7 +175,7 @@ func _build_hazards() -> void:
 func _on_coin(coin: Area3D) -> void:
 	coins += 1
 	Sound.play(self,880+float(coins%4)*110,0.16,-1,-19)
-	coin_label.text = "%02d / %02d" % [coins,total_coins]
+	coin_label.text = "%02d" % coins
 	_burst(coin.position,Color("ffd77c"),7)
 func _burst(point: Vector3, color: Color, count: int) -> void:
 	for i in count:
@@ -220,10 +217,14 @@ func finish() -> void:
 	player.velocity = Vector3.ZERO
 	progress.value = 100
 	_burst(player.position+Vector3(0,1,0),Color("ffd17a"),30)
-	heading.text = "抵达云端！"
-	detail.text = "云上花园 · 完成\n\n太阳环 %d / %d     ·     用时 %d:%02d" % [coins,total_coins,int(elapsed)/60,int(elapsed)%60]
+	overlay_eyebrow.text = "01  /  云上花园 · 完成"
+	heading.text = "抵达云端"
+	detail.text = "太阳环  %02d / %02d     ·     %d:%02d" % [coins,total_coins,int(elapsed)/60,int(elapsed)%60]
+	help_text.text = "把下一次跳跃，留给更好的风景。"
+	pause_button.hide()
 	resume_button.hide()
-	restart_button.text = "再来一次  →"
+	restart_button.text = "再来一次"
+	_button_palette(restart_button,true)
 	overlay.show()
 	restart_button.grab_focus()
 func _show_toast(message: String) -> void:
@@ -240,8 +241,10 @@ func set_paused(value: bool) -> void:
 	get_tree().paused = value
 	overlay.visible = value
 	if value:
-		heading.text = "休息一下"
-		detail.text = "云朵会等你。"
+		overlay_eyebrow.text = "CLOUDSTEP  /  云间跃行"
+		heading.text = "歇一会儿"
+		detail.text = "风景还在，等你继续。"
+		help_text.text = "A / D 或 ← / →  移动\n空格 / W / ↑  跳跃 · 长按跳得更高\nEsc  继续    ·    R  重新开始"
 		resume_button.show()
 		restart_button.text = "重新开始"
 		resume_button.grab_focus()
@@ -266,38 +269,52 @@ func _label(text: String, size: int, color: Color) -> Label:
 	return l
 func _build_ui() -> void:
 	var canvas := CanvasLayer.new()
+	canvas.name = "Interface"
 	canvas.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(canvas)
 	var ui := Control.new()
+	ui.name = "HUD"
 	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.set_script(preload("res://scripts/ui_input.gd"))
 	ui.game = self
 	canvas.add_child(ui)
 	ui.set_process_unhandled_input(true)
-	var top := PanelContainer.new()
-	top.position = Vector2(38,32)
-	top.add_theme_stylebox_override("panel",_style(Color(0.98,0.96,0.88,0.92)))
-	ui.add_child(top)
+	# Counters float directly over the world; no enclosing card or help banner.
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation",18)
-	top.add_child(row)
-	row.add_child(_label("◉",30,Color("d2a04b")))
-	coin_label = _label("00 / %02d" % total_coins,24,Color("38565b"))
+	row.name = "RingCounter"
+	row.position = Vector2(36,28)
+	row.add_theme_constant_override("separation",10)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ui.add_child(row)
+	row.add_child(_icon("ring",Vector2(36,48)))
+	coin_label = _label("00",34,Color("335b61"))
+	coin_label.name = "Count"
+	_hud_shadow(coin_label)
 	row.add_child(coin_label)
+	var total := _label("/ %02d" % total_coins,20,Color("4c7375"))
+	total.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_hud_shadow(total)
+	row.add_child(total)
 	var level := VBoxContainer.new()
-	level.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	level.position = Vector2(-295,34)
-	level.size = Vector2(255,70)
+	level.name = "LevelProgress"
+	level.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	level.position = Vector2(-105,30)
+	level.size = Vector2(210,48)
+	level.add_theme_constant_override("separation",8)
+	level.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(level)
-	var title := _label("01  /  云上花园",17,Color("42656c"))
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	var title := _label("01  /  云上花园",16,Color("466a6e"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_hud_shadow(title)
 	level.add_child(title)
 	progress = ProgressBar.new()
-	progress.custom_minimum_size = Vector2(255,5)
+	progress.name = "Journey"
+	progress.custom_minimum_size = Vector2(210,3)
+	progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	progress.show_percentage = false
-	var track := _style(Color(1,1,1,0.35),3)
-	var fill := _style(Color("e9b875"),3)
+	var track := _style(Color(0.20,0.35,0.38,0.14),2)
+	var fill := _style(Color("487b78"),2)
 	for style in [track,fill]:
 		style.content_margin_left = 0
 		style.content_margin_right = 0
@@ -306,60 +323,100 @@ func _build_ui() -> void:
 	progress.add_theme_stylebox_override("background",track)
 	progress.add_theme_stylebox_override("fill",fill)
 	level.add_child(progress)
-	toast = _label("",18,Color("45686c"))
+	pause_button = Button.new()
+	pause_button.name = "Pause"
+	pause_button.tooltip_text = "暂停 / Esc"
+	pause_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	pause_button.position = Vector2(-82,26)
+	pause_button.size = Vector2(48,48)
+	pause_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	pause_button.add_theme_stylebox_override("normal",_style(Color(1,1,1,0),24))
+	pause_button.add_theme_stylebox_override("hover",_style(Color(1,1,1,0.27),24))
+	pause_button.add_theme_stylebox_override("pressed",_style(Color(0.20,0.35,0.38,0.12),24))
+	pause_button.add_theme_stylebox_override("focus",_focus_style(24))
+	ui.add_child(pause_button)
+	var pause_icon := _icon("pause",Vector2(48,48))
+	pause_icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	pause_button.add_child(pause_icon)
+	pause_button.pressed.connect(func(): set_paused(true))
+	toast = _label("",18,Color("335b61"))
+	toast.name = "Feedback"
 	toast.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	toast.position = Vector2(-250,39)
+	toast.position = Vector2(-250,96)
 	toast.size.x = 500
 	toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_hud_shadow(toast)
 	ui.add_child(toast)
-	tutorial = PanelContainer.new()
-	tutorial.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
-	tutorial.position = Vector2(-330,-112)
-	tutorial.size = Vector2(660,65)
-	tutorial.add_theme_stylebox_override("panel",_style(Color(0.98,0.96,0.88,0.94)))
-	ui.add_child(tutorial)
-	var hint := _label("A / D  移动      空格  跳跃      长按跳得更高",19,Color("46636a"))
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	tutorial.add_child(hint)
+	# Pause and results share a cinematic scrim instead of another boxed panel.
 	overlay = ColorRect.new()
+	overlay.name = "MenuOverlay"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.color = Color(0.13,0.26,0.30,0.65)
+	overlay.color = Color(0.10,0.23,0.26,0.91)
 	ui.add_child(overlay)
-	var card := PanelContainer.new()
-	card.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	card.position = Vector2(-300,-225)
-	card.size = Vector2(600,450)
-	card.add_theme_stylebox_override("panel",_style(Color("f5eddc"),28))
-	overlay.add_child(card)
-	var column := VBoxContainer.new()
-	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	column.add_theme_constant_override("separation",22)
-	card.add_child(column)
-	heading = _label("休息一下",44,Color("36565c"))
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+	menu_column = VBoxContainer.new()
+	menu_column.name = "MenuContent"
+	menu_column.custom_minimum_size.x = 440
+	menu_column.add_theme_constant_override("separation",22)
+	center.add_child(menu_column)
+	overlay_eyebrow = _label("CLOUDSTEP  /  云间跃行",15,Color("b8cdc4"))
+	overlay_eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	menu_column.add_child(overlay_eyebrow)
+	heading = _label("歇一会儿",52,Color("fff3d8"))
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(heading)
-	detail = _label("云朵会等你。",20,Color("6b807d"))
+	menu_column.add_child(heading)
+	detail = _label("风景还在，等你继续。",20,Color("cedbd2"))
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(detail)
-	resume_button = _button("继续冒险  →")
+	menu_column.add_child(detail)
+	var spacer := Control.new()
+	spacer.custom_minimum_size.y = 8
+	menu_column.add_child(spacer)
+	resume_button = _button("继续冒险",true)
 	resume_button.pressed.connect(func(): set_paused(false))
-	column.add_child(resume_button)
-	restart_button = _button("重新开始")
+	menu_column.add_child(resume_button)
+	restart_button = _button("重新开始",false)
 	restart_button.pressed.connect(restart)
-	column.add_child(restart_button)
+	menu_column.add_child(restart_button)
+	help_text = _label("",15,Color("b8cdc4"))
+	help_text.name = "MenuHelp"
+	help_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	help_text.add_theme_constant_override("line_spacing",6)
+	menu_column.add_child(help_text)
 	overlay.hide()
-func _button(text: String) -> Button:
+func _hud_shadow(label: Label) -> void:
+	label.add_theme_color_override("font_shadow_color",Color(1,1,0.94,0.48))
+	label.add_theme_constant_override("shadow_offset_x",0)
+	label.add_theme_constant_override("shadow_offset_y",1)
+func _icon(kind: String, minimum: Vector2) -> Control:
+	var icon := Control.new()
+	icon.set_script(preload("res://scripts/hud_icon.gd"))
+	icon.kind = kind
+	icon.custom_minimum_size = minimum
+	return icon
+func _focus_style(radius: int) -> StyleBoxFlat:
+	var style := _style(Color(0,0,0,0),radius)
+	style.border_color = Color("eed49b")
+	style.set_border_width_all(2)
+	return style
+func _button(text: String, primary := false) -> Button:
 	var button := Button.new()
 	button.text = text
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	button.add_theme_font_override("font",UI_FONT)
-	button.custom_minimum_size.y = 60
-	button.add_theme_font_size_override("font_size",21)
-	button.add_theme_color_override("font_color",Color("fff5df"))
-	button.add_theme_stylebox_override("normal",_style(Color("477b7b"),14))
-	button.add_theme_stylebox_override("hover",_style(Color("59908a"),14))
-	button.add_theme_stylebox_override("pressed",_style(Color("315e68"),14))
-	var focus := _style(Color(0,0,0,0),14)
-	focus.border_color = Color("edbe73")
-	focus.set_border_width_all(3)
-	button.add_theme_stylebox_override("focus",focus)
+	button.custom_minimum_size.y = 58
+	button.add_theme_font_size_override("font_size",20)
+	_button_palette(button,primary)
 	return button
+
+func _button_palette(button: Button, primary: bool) -> void:
+	button.add_theme_color_override("font_color",Color("284f55") if primary else Color("f4e8cd"))
+	button.add_theme_color_override("font_focus_color",Color("284f55") if primary else Color("fff7e0"))
+	button.add_theme_color_override("font_hover_color",Color("284f55") if primary else Color("fff7e0"))
+	button.add_theme_color_override("font_pressed_color",Color("284f55") if primary else Color("fff7e0"))
+	button.add_theme_color_override("font_hover_pressed_color",Color("284f55") if primary else Color("fff7e0"))
+	button.add_theme_stylebox_override("normal",_style(Color("f3d89b") if primary else Color(1,1,1,0.04),10))
+	button.add_theme_stylebox_override("hover",_style(Color("ffe7b2") if primary else Color(1,1,1,0.10),10))
+	button.add_theme_stylebox_override("pressed",_style(Color("dfc28b") if primary else Color(1,1,1,0.16),10))
+	button.add_theme_stylebox_override("focus",_focus_style(10))
