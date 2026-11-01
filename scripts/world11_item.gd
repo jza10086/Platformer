@@ -1,13 +1,13 @@
 extends CharacterBody3D
 ## Block rewards with their own motion and single-use pickup handling.
 signal picked_up(mode)
-const ART = preload("res://scripts/world11_assets.gd")
-const GRAVITY := 24.0
-var mode := "mushroom"
+const ART: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_assets.gd")
+const GRAVITY: float = 24.0
+var mode: String = "mushroom"
 var owner_game: Node
-var direction := 1.0
-var collected := false
-var age := 0.0
+var direction: float = 1.0
+var collected: bool = false
+var age: float = 0.0
 var visual: Node3D
 
 func configure(new_mode: String, game: Node) -> void:
@@ -18,8 +18,8 @@ func _ready() -> void:
 	collision_layer = 8
 	collision_mask = 2
 	floor_snap_length = 0.10
-	var collision := CollisionShape3D.new()
-	var box := BoxShape3D.new()
+	var collision: CollisionShape3D = CollisionShape3D.new()
+	var box: BoxShape3D = BoxShape3D.new()
 	box.size = Vector3(0.65, 0.72, 0.65)
 	collision.shape = box
 	collision.position.y = 0.36
@@ -51,7 +51,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if age < 0.12 or not is_instance_valid(owner_game):
 		return
-	var player := owner_game.get("player") as CharacterBody3D
+	var player: CharacterBody3D = owner_game.get("player") as CharacterBody3D
 	if not is_instance_valid(player) or not player.control_enabled or player.dead:
 		return
 	if absf(player.global_position.x - global_position.x) > 0.72:
@@ -74,16 +74,11 @@ func pickup(player: CharacterBody3D) -> void:
 			player.give_star(10.0)
 			_award(1000)
 		"life":
-			if is_instance_valid(owner_game) and owner_game.has_method("add_life"):
-				owner_game.add_life()
-			else:
-				_award(1000)
+			owner_game.add_life()
 		_:
-			if is_instance_valid(owner_game) and owner_game.has_method("add_coin"):
-				owner_game.add_coin()
+			owner_game.add_coin()
 	picked_up.emit(mode)
 	queue_free()
 
 func _award(points: int) -> void:
-	if is_instance_valid(owner_game) and owner_game.has_method("award_points"):
-		owner_game.award_points(points)
+	owner_game.award_points(points)

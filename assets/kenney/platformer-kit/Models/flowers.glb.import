@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://sdqg12xl2ey7"
-path="res://.godot/imported/flowers.glb-8ce5fd35b7f3601e1c118d7e8d4927d6.scn"
+uid="uid://dy1v8iu6ppi8u"
+path="res://.godot/imported/flowers.glb-7ef1dfd560f8e5016585624d6bf54c26.scn"
 
 [deps]
 
-source_file="res://assets/kenney/platformer-kit/Models/flowers.glb"
-dest_files=["res://.godot/imported/flowers.glb-8ce5fd35b7f3601e1c118d7e8d4927d6.scn"]
+source_file="res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/flowers.glb"
+dest_files=["res://.godot/imported/flowers.glb-7ef1dfd560f8e5016585624d6bf54c26.scn"]
 
 [params]
 

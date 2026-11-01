@@ -1,4 +1,7 @@
 extends CharacterBody3D
+const GPDPlatformShapes: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/shapes.gd")
+var party_input: PartyInput
+var jump_was_pressed: bool = false
 ## Feet-origin, single-plane platforming controller for the block-scale course.
 signal jumped
 signal landed
@@ -7,28 +10,28 @@ signal damaged
 signal died
 signal power_changed(big)
 
-const WALK_SPEED := 5.0
-const RUN_SPEED := 8.8
+const WALK_SPEED: float = 5.0
+const RUN_SPEED: float = 8.8
 # 16.2 / 28 yields about 4.55 tiles at 60 Hz, clearing four-tile pipes.
-const JUMP_SPEED := 16.2
-const GRAVITY := 28.0
-const SMALL_HEIGHT := 0.90
-const BIG_HEIGHT := 1.80
+const JUMP_SPEED: float = 16.2
+const GRAVITY: float = 28.0
+const SMALL_HEIGHT: float = 0.90
+const BIG_HEIGHT: float = 1.80
 
-var control_enabled := true
-var big := false
-var height := SMALL_HEIGHT
-var invulnerability := 0.0
-var star_time := 0.0
-var dead := false
-var coyote := 0.0
-var buffer := 0.0
-var was_grounded := false
-var previous_position := Vector3.ZERO
+var control_enabled: bool = true
+var big: bool = false
+var height: Variant = SMALL_HEIGHT
+var invulnerability: float = 0.0
+var star_time: float = 0.0
+var dead: bool = false
+var coyote: float = 0.0
+var buffer: float = 0.0
+var was_grounded: bool = false
+var previous_position: Variant = Vector3.ZERO
 var visual: Node3D
 var collision: CollisionShape3D
-var squash := Vector3.ONE
-var facing := 1.0
+var squash: Variant = Vector3.ONE
+var facing: float = 1.0
 
 func _ready() -> void:
 	collision_layer = 1
@@ -36,20 +39,20 @@ func _ready() -> void:
 	floor_snap_length = 0.12
 	floor_stop_on_slope = true
 	collision = CollisionShape3D.new()
-	var box := BoxShape3D.new()
+	var box: BoxShape3D = BoxShape3D.new()
 	box.size = Vector3(0.78, height, 0.78)
 	collision.shape = box
 	collision.position.y = height * 0.5
 	add_child(collision)
 	visual = Node3D.new()
 	add_child(visual)
-	Shapes.box(visual, Vector3(0, 0.45, 0), Vector3(0.90, 0.90, 0.90), Color("ef795f"))
-	Shapes.box(visual, Vector3(0, 0.82, 0), Vector3(0.90, 0.13, 0.90), Color("ffb884"))
-	Shapes.box(visual, Vector3(0, 0.12, 0), Vector3(0.90, 0.16, 0.90), Color("c2504c"))
-	for x in [-0.17, 0.17]:
-		Shapes.box(visual, Vector3(x, 0.52, 0.46), Vector3(0.12, 0.19, 0.035), Color("fff4dd"))
-		Shapes.box(visual, Vector3(x + 0.025, 0.52, 0.48), Vector3(0.047, 0.10, 0.018), Color("344b59"))
-	Shapes.box(visual, Vector3(0, 0.30, 0.46), Vector3(0.14, 0.04, 0.03), Color("8e4646"))
+	GPDPlatformShapes.box(visual, Vector3(0, 0.45, 0), Vector3(0.90, 0.90, 0.90), Color("ef795f"))
+	GPDPlatformShapes.box(visual, Vector3(0, 0.82, 0), Vector3(0.90, 0.13, 0.90), Color("ffb884"))
+	GPDPlatformShapes.box(visual, Vector3(0, 0.12, 0), Vector3(0.90, 0.16, 0.90), Color("c2504c"))
+	for x: Variant in [-0.17, 0.17]:
+		GPDPlatformShapes.box(visual, Vector3(x, 0.52, 0.46), Vector3(0.12, 0.19, 0.035), Color("fff4dd"))
+		GPDPlatformShapes.box(visual, Vector3(x + 0.025, 0.52, 0.48), Vector3(0.047, 0.10, 0.018), Color("344b59"))
+	GPDPlatformShapes.box(visual, Vector3(0, 0.30, 0.46), Vector3(0.14, 0.04, 0.03), Color("8e4646"))
 	previous_position = global_position
 	_update_size()
 
@@ -58,12 +61,12 @@ func _physics_process(delta: float) -> void:
 	star_time = maxf(0.0, star_time - delta)
 	_update_visual(delta)
 	previous_position = global_position
-	if not control_enabled or dead:
+	if party_input == null or not control_enabled or dead:
 		return
-	var axis := Input.get_axis("move_left", "move_right")
-	var running := InputMap.has_action("run") and Input.is_action_pressed("run")
-	var target := axis * (RUN_SPEED if running else WALK_SPEED)
-	var acceleration := 42.0 if is_on_floor() else 24.0
+	var axis: Variant = float(party_input.is_pressed(&"move_right")) - float(party_input.is_pressed(&"move_left"))
+	var running: Variant = party_input.is_pressed(&"platform_run")
+	var target: Variant = axis * (RUN_SPEED if running else WALK_SPEED)
+	var acceleration: Variant = 42.0 if is_on_floor() else 24.0
 	if absf(axis) < 0.01:
 		acceleration = 46.0 if is_on_floor() else 12.0
 	velocity.x = move_toward(velocity.x, target, acceleration * delta)
@@ -75,7 +78,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		coyote = maxf(0.0, coyote - delta)
 	buffer = maxf(0.0, buffer - delta)
-	if Input.is_action_just_pressed("jump"):
+	var jump_now: bool = party_input.is_pressed(&"platform_jump")
+	if jump_now and not jump_was_pressed:
 		buffer = 0.14
 	if buffer > 0.0 and coyote > 0.0:
 		velocity.y = JUMP_SPEED
@@ -83,20 +87,21 @@ func _physics_process(delta: float) -> void:
 		coyote = 0.0
 		squash = Vector3(0.88, 1.12, 0.88)
 		jumped.emit()
-	if Input.is_action_just_released("jump") and velocity.y > 5.5:
+	if not jump_now and jump_was_pressed and velocity.y > 5.5:
 		velocity.y = 5.5
+	jump_was_pressed = jump_now
 	if not is_on_floor() or velocity.y > 0.0:
 		velocity.y -= GRAVITY * delta
 	velocity.y = maxf(velocity.y, -26.0)
-	var upward := velocity.y > 0.0
-	var landing_speed := velocity.y
+	var upward: Variant = velocity.y > 0.0
+	var landing_speed: Variant = velocity.y
 	move_and_slide()
 	position.z = 0.0
 	if upward:
 		var bumped: Array[int] = []
-		for index in get_slide_collision_count():
-			var hit := get_slide_collision(index)
-			var body := hit.get_collider()
+		for index: Variant in get_slide_collision_count():
+			var hit: Variant = get_slide_collision(index)
+			var body: Variant = hit.get_collider()
 			if hit.get_normal().y < -0.5 and is_instance_valid(body) and body.has_method("bump"):
 				var body_id: int = body.get_instance_id()
 				if not bumped.has(body_id):
@@ -133,7 +138,7 @@ func grow() -> void:
 	squash = Vector3(1.12, 0.88, 1.12)
 	power_changed.emit(big)
 
-func give_star(duration := 10.0) -> void:
+func give_star(duration: float = 10.0) -> void:
 	star_time = maxf(star_time, duration)
 
 func take_damage() -> void:
@@ -152,7 +157,7 @@ func take_damage() -> void:
 		damaged.emit()
 		died.emit()
 
-func bounce(strength := 10.0) -> void:
+func bounce(strength: float = 10.0) -> void:
 	velocity.y = strength
 	coyote = 0.0
 	buffer = 0.0

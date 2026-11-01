@@ -1,14 +1,15 @@
 extends StaticBody3D
+const GPDPlatformSound: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/sound.gd")
 ## One grid cell. Its render module and collider occupy precisely one tile.
-var kind := "brick"
-var reward := ""
-var remaining := 1
-var used := false
-var hidden := false
+var kind: String = "brick"
+var reward: String = ""
+var remaining: int = 1
+var used: bool = false
+var hidden: bool = false
 var owner_game: Node
 var visual: Node3D
 var collision: CollisionShape3D
-var bumping := false
+var bumping: bool = false
 func configure(data: Dictionary, game: Node) -> void:
 	kind = data.get("kind", "brick")
 	reward = data.get("reward", "")
@@ -19,7 +20,7 @@ func _ready() -> void:
 	collision_layer = 0 if hidden else 2
 	collision_mask = 0
 	collision = CollisionShape3D.new()
-	var shape := BoxShape3D.new()
+	var shape: BoxShape3D = BoxShape3D.new()
 	shape.size = Vector3.ONE
 	collision.shape = shape
 	add_child(collision)
@@ -28,7 +29,7 @@ func _ready() -> void:
 	_draw()
 	visual.visible = not hidden
 func _draw() -> void:
-	for node in visual.get_children():
+	for node: Variant in visual.get_children():
 		visual.remove_child(node)
 		node.queue_free()
 	if used:
@@ -37,7 +38,7 @@ func _draw() -> void:
 		owner_game.ART.make(visual,"brick",Vector3.ZERO,Vector3.ONE*0.982)
 	else:
 		owner_game.ART.make(visual,"crate-item",Vector3.ZERO,Vector3.ONE*0.982)
-		var label := Label3D.new()
+		var label: Label3D = Label3D.new()
 		label.text = "?"
 		label.font_size = 78
 		label.pixel_size = 0.008
@@ -60,13 +61,13 @@ func bump(actor: Node) -> void:
 		queue_free()
 		return
 	bumping = true
-	var t := create_tween()
+	var t: Variant = create_tween()
 	t.tween_property(visual,"position:y",0.20,0.075)
 	t.tween_property(visual,"position:y",0.0,0.12)
-	t.tween_callback(func(): bumping = false)
+	t.tween_callback(func() -> void: bumping = false)
 	owner_game.bump_enemies(global_position)
 	if reward.is_empty():
-		Sound.play(self,170,0.07,-1,-26)
+		GPDPlatformSound.play(self,170,0.07,-1,-26)
 		return
 	remaining -= 1
 	if reward == "coin":

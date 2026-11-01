@@ -39,7 +39,7 @@
 
 - `Models/mushroom-single.glb`：仅提取 `mushrooms.glb` 中最高一朵蘑菇的两个连通几何部分（帽与柄），未重新绘制；出生、移动、拾取、成长与加命逻辑保持原样。普通奖励使用原红色，加命奖励仅将帽的暖色调改为绿色。
 - `Models/flag-cloth.glb`：仅提取 `flag.glb` 中旗布的连通几何部分，使降旗时旗杆不跟随移动。
-- 生成工具：[`tools/derive_platformer_assets.py`](tools/derive_platformer_assets.py)。在仓库根目录执行 `python3 tools/derive_platformer_assets.py` 可从保留的源 GLB 字节级重建这两个派生文件。工具只读取模型数据，不执行下载包内代码。
+- 生成工具保留在原型 `temp_game/Platformer/tools/derive_platformer_assets.py`；本包随附派生结果与源模型，运行无需生成工具。
 - 运行时适配器：[`scripts/world11_assets.gd`](scripts/world11_assets.gd)。从源 mesh 的实际 AABB 居中、归一，再设置明确视觉尺寸；保留 UV 和原图集。适配器仅创建 MeshInstance3D，不创建或修改任何碰撞体。
 - 已用方块在原位置更新 mesh/material；隐藏方块仍按原条件显示；撞碎、顶起、金币弹出和奖励状态均由原逻辑驱动。
 - 地面仍由 402 个独立等尺寸视觉格子构成；不会合成一整片地形或用装饰跨过三个真实缺口。
@@ -60,4 +60,4 @@
 
 ## 4. 布局参考与版权边界
 
-World 1-1 的布局参考见 [README 的布局参考](README.md#布局参考)。地图参考和游戏资产是两件事：本工程没有引入 Nintendo 的 ROM、商业游戏模型、原版贴图、人物精灵、音乐或其他版权资产；本次新引入的环境与道具模型来自上述 Kenney CC0 官方资产包。
+World 1-1 延续项目提供的 Platformer 默认原型关卡布局。地图参考和游戏资产是两件事：本工程没有引入 Nintendo 的 ROM、商业游戏模型、原版贴图、人物精灵、音乐或其他版权资产；本次新引入的环境与道具模型来自上述 Kenney CC0 官方资产包。

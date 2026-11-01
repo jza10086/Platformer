@@ -2,13 +2,13 @@ extends RefCounted
 ## Visual-only adapters for Kenney Platformer Kit 4.1 (CC0).
 ## Geometry is normalized from its actual imported AABB. Nothing here creates
 ## collision bodies or changes the level grid, player, camera, or game rules.
-const DIRECTORY := "res://assets/kenney/platformer-kit/Models/"
+const DIRECTORY: String = "res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/"
 static var mesh_cache: Dictionary = {}
 static var material_cache: Dictionary = {}
 static var palette_image: Image
 
-static func make(parent: Node, asset: String, point: Vector3, size: Vector3, variant := "", pipe_height := 0.0) -> MeshInstance3D:
-	var instance := MeshInstance3D.new()
+static func make(parent: Node, asset: String, point: Vector3, size: Vector3, variant: String = "", pipe_height: float = 0.0) -> MeshInstance3D:
+	var instance: MeshInstance3D = MeshInstance3D.new()
 	instance.name = "Asset_" + asset.replace("-", "_")
 	instance.mesh = normalized_mesh(asset, variant, pipe_height)
 	instance.position = point
@@ -18,33 +18,33 @@ static func make(parent: Node, asset: String, point: Vector3, size: Vector3, var
 	parent.add_child(instance)
 	return instance
 
-static func normalized_mesh(asset: String, variant := "", pipe_height := 0.0) -> ArrayMesh:
+static func normalized_mesh(asset: String, variant: String = "", pipe_height: float = 0.0) -> ArrayMesh:
 	if asset == "brick" and variant.is_empty(): variant = "masonry"
-	var key := "%s:%s:%.3f" % [asset, variant, pipe_height]
+	var key: Variant = "%s:%s:%.3f" % [asset, variant, pipe_height]
 	if mesh_cache.has(key): return mesh_cache[key]
-	var packed := load(DIRECTORY + asset + ".glb") as PackedScene
+	var packed: PackedScene = load(DIRECTORY + asset + ".glb") as PackedScene
 	assert(packed != null, "Missing licensed model: " + asset)
-	var root := packed.instantiate()
-	var source := _find_mesh(root)
+	var root: Variant = packed.instantiate()
+	var source: Variant = _find_mesh(root)
 	assert(source != null, "Model contains no mesh: " + asset)
-	var bounds := source.mesh.get_aabb()
-	var center := bounds.get_center()
-	var extent := bounds.size
-	var result := ArrayMesh.new()
-	for surface in source.mesh.get_surface_count():
-		var arrays := source.mesh.surface_get_arrays(surface)
+	var bounds: Variant = source.mesh.get_aabb()
+	var center: Variant = bounds.get_center()
+	var extent: Variant = bounds.size
+	var result: ArrayMesh = ArrayMesh.new()
+	for surface: Variant in source.mesh.get_surface_count():
+		var arrays: Variant = source.mesh.surface_get_arrays(surface)
 		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
 		var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
-		for index in vertices.size():
-			var point := vertices[index]
+		for index: Variant in vertices.size():
+			var point: Variant = vertices[index]
 			vertices[index] = (point - center) / extent
 			if not normals.is_empty(): normals[index] = (normals[index] * extent).normalized()
 			if pipe_height > 0:
 				# The source pipe has a short body followed by a 0.285714-unit
 				# collar. Extend only the body; preserve the collar's world height.
-				var collar_start := 0.27857143
-				var collar_height := 0.57142865
-				var y := point.y - bounds.position.y
+				var collar_start: float = 0.27857143
+				var collar_height: float = 0.57142865
+				var y: Variant = point.y - bounds.position.y
 				if y <= collar_start + 0.00001:
 					vertices[index].y = y / collar_start * (pipe_height - collar_height) / pipe_height - 0.5
 				else:
@@ -59,23 +59,28 @@ static func normalized_mesh(asset: String, variant := "", pipe_height := 0.0) ->
 
 static func _find_mesh(node: Node) -> MeshInstance3D:
 	if node is MeshInstance3D: return node
-	for child in node.get_children():
-		var found := _find_mesh(child)
+	for child: Variant in node.get_children():
+		var found: Variant = _find_mesh(child)
 		if found != null: return found
 	return null
 
 static func _material(original: Material, variant: String) -> Material:
 	if material_cache.has(variant): return material_cache[variant]
-	var material := original.duplicate() as StandardMaterial3D
+	var material: StandardMaterial3D = original.duplicate() as StandardMaterial3D
 	material.roughness = 0.88
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	if not variant.is_empty():
 		if palette_image == null:
 			palette_image = (load(DIRECTORY + "Textures/colormap.png") as Texture2D).get_image()
-		var changed := palette_image.duplicate() as Image
-		for y in changed.get_height():
-			for x in changed.get_width():
-				var color := changed.get_pixel(x, y)
+			if palette_image.is_compressed():
+				var error: Error = palette_image.decompress()
+				if error != OK:
+					push_error("无法解压跳台颜色图：" + error_string(error))
+					return null
+		var changed: Image = palette_image.duplicate() as Image
+		for y: Variant in changed.get_height():
+			for x: Variant in changed.get_width():
+				var color: Variant = changed.get_pixel(x, y)
 				match variant:
 					"masonry":
 						# The original brick has blue-grey mortar. Warm that mortar

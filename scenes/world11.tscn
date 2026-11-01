@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
-[ext_resource type="Script" path="res://scripts/world11.gd" id="1"]
-[ext_resource type="Script" path="res://scripts/world11_player.gd" id="2"]
+[ext_resource type="Script" path="res://games/minigame/godot_party_default_platformer/scripts/world11.gd" id="1"]
+[ext_resource type="Script" path="res://games/minigame/godot_party_default_platformer/scripts/world11_player.gd" id="2"]
 [node name="World11" type="Node3D"]
 script = ExtResource("1")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

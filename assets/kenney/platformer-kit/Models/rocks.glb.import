@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dyxms5vs2dkup"
-path="res://.godot/imported/rocks.glb-be12ba0a743fad34514aa2d085552610.scn"
+uid="uid://0fpyiou1j1jf"
+path="res://.godot/imported/rocks.glb-e737f653e0695b273a8d5e328cf7f649.scn"
 
 [deps]
 
-source_file="res://assets/kenney/platformer-kit/Models/rocks.glb"
-dest_files=["res://.godot/imported/rocks.glb-be12ba0a743fad34514aa2d085552610.scn"]
+source_file="res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/rocks.glb"
+dest_files=["res://.godot/imported/rocks.glb-e737f653e0695b273a8d5e328cf7f649.scn"]
 
 [params]
 

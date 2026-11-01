@@ -5,3 +5,7 @@
 /tests/qa_capture.gd
 /tests/qa_capture.gd.uid
 /screenshots/
+*.TMP
+__pycache__/
+*.pyc
+/config/

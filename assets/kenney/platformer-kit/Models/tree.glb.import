@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://d08xftq8pyjd0"
-path="res://.godot/imported/tree.glb-1beeace041396704e0aea99d5ba4c37c.scn"
+uid="uid://b8bhyv2bxus1i"
+path="res://.godot/imported/tree.glb-76680e1c41a696f94db69c0f75b679d4.scn"
 
 [deps]
 
-source_file="res://assets/kenney/platformer-kit/Models/tree.glb"
-dest_files=["res://.godot/imported/tree.glb-1beeace041396704e0aea99d5ba4c37c.scn"]
+source_file="res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/tree.glb"
+dest_files=["res://.godot/imported/tree.glb-76680e1c41a696f94db69c0f75b679d4.scn"]
 
 [params]
 

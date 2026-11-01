@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cbprva3pd57h"
-path="res://.godot/imported/mushroom-single.glb-b380ab3edb9d1e50dabcddd30d560cb0.scn"
+uid="uid://dxcq2boqxlbox"
+path="res://.godot/imported/mushroom-single.glb-e681f39f0a940508b7020ae1894dfcba.scn"
 
 [deps]
 
-source_file="res://assets/kenney/platformer-kit/Models/mushroom-single.glb"
-dest_files=["res://.godot/imported/mushroom-single.glb-b380ab3edb9d1e50dabcddd30d560cb0.scn"]
+source_file="res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/mushroom-single.glb"
+dest_files=["res://.godot/imported/mushroom-single.glb-e681f39f0a940508b7020ae1894dfcba.scn"]
 
 [params]
 

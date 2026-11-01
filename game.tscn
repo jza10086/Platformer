@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bio7e67yy0duf"]
+
+[ext_resource type="Script" uid="uid://bttdp51ngwmr7" path="res://games/minigame/godot_party_default_platformer/game.gd" id="1_4oopl"]
+
+[node name="Game" type="Node3D" unique_id=1490176572]
+script = ExtResource("1_4oopl")
