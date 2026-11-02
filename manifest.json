@@ -5,6 +5,7 @@
   "id": "godot_party_default_platformer",
   "name": "GodotPartyDefault · 云间跃行",
   "kind": "minigame",
+  "introduction": "在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。",
   "entry": "game.tscn",
   "player_counts": [2, 3, 4, 5, 6, 7, 8],
   "tags": [
@@ -21,7 +22,8 @@
         "api_major": 1,
         "min_api_minor": 0
       },
-      "entry": "adapter.gd"
+      "introduction": "在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。",
+  "entry": "adapter.gd"
     }
   ],
   "config_schema": "settings.gd"
