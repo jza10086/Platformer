@@ -7,7 +7,15 @@
   "kind": "minigame",
   "introduction": "在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。",
   "entry": "game.tscn",
-  "player_counts": [2, 3, 4, 5, 6, 7, 8],
+  "player_counts": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
   "tags": [
     "original"
   ],
@@ -23,8 +31,17 @@
         "min_api_minor": 0
       },
       "introduction": "在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。",
-  "entry": "adapter.gd"
+      "entry": "adapter.gd"
     }
   ],
-  "config_schema": "settings.gd"
+  "config_schema": "settings.gd",
+  "localization": {
+    "supported_locales": [
+      "zh_Hans"
+    ],
+    "fallback_locale": "zh_Hans",
+    "translations": {
+      "zh_Hans": "i18n/zh_Hans.po"
+    }
+  }
 }

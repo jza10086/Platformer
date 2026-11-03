@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_Hans\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "GodotPartyDefault · 云间跃行"
+msgstr "GodotPartyDefault · 云间跃行"
+
+msgid "加速"
+msgstr "加速"
+
+msgid "向右"
+msgstr "向右"
+
+msgid "向左"
+msgstr "向左"
+
+msgid "回合秒数"
+msgstr "回合秒数"
+
+msgid "在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。"
+msgstr "在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。"
+
+msgid "本机偏好"
+msgstr "本机偏好"
+
+msgid "游戏规则"
+msgstr "游戏规则"
+
+msgid "跳跃"
+msgstr "跳跃"
+
+msgid "进入水管"
+msgstr "进入水管"
