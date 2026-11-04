@@ -1,33 +1,19 @@
 extends StaticBody3D
 const GPDPlatformSound: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/sound.gd")
 ## One grid cell. Its render module and collider occupy precisely one tile.
-var kind: String = "brick"
-var reward: String = ""
-var remaining: int = 1
+@export var kind: String = "brick"
+@export var reward: String = ""
+@export var remaining: int = 1
 var used: bool = false
-var hidden: bool = false
+@export var hidden: bool = false
 var owner_game: Node
 var visual: Node3D
 var collision: CollisionShape3D
 var bumping: bool = false
-func configure(data: Dictionary, game: Node) -> void:
-	kind = data.get("kind", "brick")
-	reward = data.get("reward", "")
-	remaining = data.get("count", 1)
-	hidden = data.get("hidden", false)
-	owner_game = game
 func _ready() -> void:
-	collision_layer = 0 if hidden else 2
-	collision_mask = 0
-	collision = CollisionShape3D.new()
-	var shape: BoxShape3D = BoxShape3D.new()
-	shape.size = Vector3.ONE
-	collision.shape = shape
-	add_child(collision)
-	visual = Node3D.new()
-	add_child(visual)
-	_draw()
-	visual.visible = not hidden
+	visual = $Visual
+	collision = $Collision
+
 func _draw() -> void:
 	for node: Variant in visual.get_children():
 		visual.remove_child(node)

@@ -2,5 +2,21 @@
 
 [ext_resource type="Script" uid="uid://bttdp51ngwmr7" path="res://games/minigame/godot_party_default_platformer/game.gd" id="1_4oopl"]
 
-[node name="Game" type="Node3D" unique_id=1490176572]
+[ext_resource type="PackedScene" path="res://games/minigame/godot_party_default_platformer/scenes/world11.tscn" id="world"]
+[ext_resource type="PackedScene" path="res://games/protocols/godot_party_default_protocol/challenge_hud.tscn" id="hud"]
+
+[node name="Game" type="Node3D" groups=["party_minimal_hud"] unique_id=1490176572]
 script = ExtResource("1_4oopl")
+
+[node name="Gameplay" parent="." instance=ExtResource("world")]
+process_mode = 4
+
+[node name="ChallengeHUD" parent="." instance=ExtResource("hud")]
+
+[node name="Status" parent="ChallengeHUD" index="0"]
+offset_top = 125.0
+
+[node name="RoundClock" parent="ChallengeHUD/Status" index="0"]
+text = "云间跃行 · 剩余 90 秒"
+
+[editable path="ChallengeHUD"]

@@ -1,22 +1,544 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
+
 [ext_resource type="Script" path="res://games/minigame/godot_party_default_platformer/scripts/world11.gd" id="1"]
 [ext_resource type="Script" path="res://games/minigame/godot_party_default_platformer/scripts/world11_player.gd" id="2"]
-[node name="World11" type="Node3D"]
+[ext_resource type="FontFile" path="res://games/minigame/godot_party_default_platformer/assets/fonts/NotoSansCJK.ttc" id="3_usicb"]
+
+[ext_resource type="PackedScene" path="res://games/minigame/godot_party_default_platformer/scenes/course.tscn" id="course"]
+
+[sub_resource type="Environment" id="Environment_7fsjm"]
+background_mode = 1
+background_color = Color(0.4509804, 0.7254902, 0.87058824, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.8509804, 0.92941177, 1, 1)
+ambient_light_energy = 0.35
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lgx5r"]
+size = Vector3(0.78, 0.9, 0.78)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q2llo"]
+albedo_color = Color(0.9372549, 0.4745098, 0.37254903, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_lbg6y"]
+size = Vector3(0.9, 0.9, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lynkq"]
+albedo_color = Color(1, 0.72156864, 0.5176471, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_rclh6"]
+size = Vector3(0.9, 0.13, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fdawp"]
+albedo_color = Color(0.7607843, 0.3137255, 0.29803923, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_trn1w"]
+size = Vector3(0.9, 0.16, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7t46d"]
+albedo_color = Color(1, 0.95686275, 0.8666667, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_yko1j"]
+size = Vector3(0.12, 0.19, 0.035)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7od2n"]
+albedo_color = Color(0.20392157, 0.29411766, 0.34901962, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_hu0tk"]
+size = Vector3(0.047, 0.1, 0.018)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn63k"]
+albedo_color = Color(1, 0.95686275, 0.8666667, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_vm48t"]
+size = Vector3(0.12, 0.19, 0.035)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8a885"]
+albedo_color = Color(0.20392157, 0.29411766, 0.34901962, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_aumxm"]
+size = Vector3(0.047, 0.1, 0.018)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1v8js"]
+albedo_color = Color(0.5568628, 0.27450982, 0.27450982, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_v8ieq"]
+size = Vector3(0.14, 0.04, 0.03)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_urs6s"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(1, 1, 1, 0.06)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oflju"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(1, 1, 1, 0.16)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1lypo"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_554mq"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.93333334, 0.83137256, 0.60784316, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2lkpk"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(0.9529412, 0.84705883, 0.60784316, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fe14q"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(0.8745098, 0.7607843, 0.54509807, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xegbm"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(1, 0.90588236, 0.69803923, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vfm1w"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.93333334, 0.83137256, 0.60784316, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8sab2"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(1, 1, 1, 0.06)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gqxib"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(1, 1, 1, 0.16)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jewog"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o5s08"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.93333334, 0.83137256, 0.60784316, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="World11" type="Node3D" unique_id=337379045]
 script = ExtResource("1")
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-[node name="Sun" type="DirectionalLight3D" parent="."]
-rotation_degrees = Vector3(-32, -25, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=697787263]
+environment = SubResource("Environment_7fsjm")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1168417764]
+transform = Transform3D(0.90630776, 0.22395356, -0.3584006, 0, 0.8480481, 0.52991927, 0.42261827, -0.48026994, 0.76859254, 0, 0, 0)
 light_color = Color(1, 0.94, 0.82, 1)
 light_energy = 0.78
 shadow_enabled = true
 directional_shadow_max_distance = 38.0
-[node name="Camera3D" type="Camera3D" parent="."]
-position = Vector3(10.5, 5, 16)
-projection = 0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=13473726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.526724, 5, 16)
+current = true
 fov = 46.0
 near = 0.1
 far = 140.0
-current = true
-[node name="Player" type="CharacterBody3D" parent="." groups=["player"]]
-position = Vector3(2.5, 0.1, 0)
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=557834028 groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.1, 0)
+collision_mask = 2
+floor_snap_length = 0.12
 script = ExtResource("2")
+
+[node name="Collision" type="CollisionShape3D" parent="Player" unique_id=935928318]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_lgx5r")
+
+[node name="Visual" type="Node3D" parent="Player" unique_id=830939076]
+
+[node name="MeshInstance3D1" type="MeshInstance3D" parent="Player/Visual" unique_id=1180485389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+material_override = SubResource("StandardMaterial3D_q2llo")
+mesh = SubResource("BoxMesh_lbg6y")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Player/Visual" unique_id=431815501]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, 0)
+material_override = SubResource("StandardMaterial3D_lynkq")
+mesh = SubResource("BoxMesh_rclh6")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Player/Visual" unique_id=643261186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+material_override = SubResource("StandardMaterial3D_fdawp")
+mesh = SubResource("BoxMesh_trn1w")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Player/Visual" unique_id=420168483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 0.52, 0.46)
+material_override = SubResource("StandardMaterial3D_7t46d")
+mesh = SubResource("BoxMesh_yko1j")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Player/Visual" unique_id=2120284315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.145, 0.52, 0.48)
+material_override = SubResource("StandardMaterial3D_7od2n")
+mesh = SubResource("BoxMesh_hu0tk")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Player/Visual" unique_id=570692581]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17, 0.52, 0.46)
+material_override = SubResource("StandardMaterial3D_rn63k")
+mesh = SubResource("BoxMesh_vm48t")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Player/Visual" unique_id=933103771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.195, 0.52, 0.48)
+material_override = SubResource("StandardMaterial3D_8a885")
+mesh = SubResource("BoxMesh_aumxm")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="Player/Visual" unique_id=992038059]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.46)
+material_override = SubResource("StandardMaterial3D_1v8js")
+mesh = SubResource("BoxMesh_v8ieq")
+
+[node name="Interface" type="CanvasLayer" parent="." unique_id=1049018994]
+
+[node name="Control1" type="Control" parent="Interface" unique_id=127600816]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="MarginContainer1" type="MarginContainer" parent="Interface/Control1" unique_id=1825358149]
+layout_mode = 0
+anchor_right = 1.0
+mouse_filter = 2
+theme_override_constants/margin_left = 38
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 38
+
+[node name="HBoxContainer1" type="HBoxContainer" parent="Interface/Control1/MarginContainer1" unique_id=782947161]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 46
+
+[node name="VBoxContainer1" type="VBoxContainer" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=229097869]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label1" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer1" unique_id=749833437]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 13
+text = "SCORE"
+
+[node name="ScoreLabel" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer1" unique_id=254562460]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 28
+text = "000000"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=260909768]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label1" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer2" unique_id=1022482773]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 13
+text = "COINS"
+
+[node name="CoinLabel" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer2" unique_id=612941768]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 28
+text = "× 00"
+
+[node name="Control3" type="Control" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=1657069972]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=1090142718]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label1" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer4" unique_id=171642051]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 13
+text = "WORLD"
+
+[node name="Label2" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer4" unique_id=1857932746]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 28
+text = "1-1"
+
+[node name="Control5" type="Control" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=17040389]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer6" type="VBoxContainer" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=491121349]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label1" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer6" unique_id=1543533959]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 13
+text = "LIVES"
+
+[node name="LifeLabel" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer6" unique_id=1422810352]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 28
+text = "× 3"
+
+[node name="VBoxContainer7" type="VBoxContainer" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=364808982]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label1" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer7" unique_id=1309960283]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 13
+text = "TIME"
+
+[node name="TimeLabel" type="Label" parent="Interface/Control1/MarginContainer1/HBoxContainer1/VBoxContainer7" unique_id=305560557]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 28
+text = "400"
+
+[node name="PauseButton" type="Button" parent="Interface/Control1/MarginContainer1/HBoxContainer1" unique_id=316109]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_focus_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_pressed_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_hover_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_urs6s")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_oflju")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1lypo")
+theme_override_styles/focus = SubResource("StyleBoxFlat_554mq")
+text = "Ⅱ"
+
+[node name="Toast" type="Label" parent="Interface/Control1" unique_id=1224758771]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_top = 105.0
+offset_right = 350.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="Overlay" type="ColorRect" parent="Interface/Control1" unique_id=2028470606]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.07, 0.16, 0.23, 0.93)
+
+[node name="CenterContainer1" type="CenterContainer" parent="Interface/Control1/Overlay" unique_id=1620725934]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer1" type="VBoxContainer" parent="Interface/Control1/Overlay/CenterContainer1" unique_id=412629108]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Label1" type="Label" parent="Interface/Control1/Overlay/CenterContainer1/VBoxContainer1" unique_id=1538780616]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6039216, 0.7882353, 0.81960785, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 15
+text = "CLOUDSTEP  /  WORLD 1-1"
+horizontal_alignment = 1
+
+[node name="Heading" type="Label" parent="Interface/Control1/Overlay/CenterContainer1/VBoxContainer1" unique_id=1665767851]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9607843, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 50
+text = "暂停"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="Interface/Control1/Overlay/CenterContainer1/VBoxContainer1" unique_id=119578863]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78039217, 0.8509804, 0.8509804, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Interface/Control1/Overlay/CenterContainer1/VBoxContainer1" unique_id=144361830]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.15686275, 0.30980393, 0.33333334, 1)
+theme_override_colors/font_focus_color = Color(0.15686275, 0.30980393, 0.33333334, 1)
+theme_override_colors/font_pressed_color = Color(0.15686275, 0.30980393, 0.33333334, 1)
+theme_override_colors/font_hover_color = Color(0.15686275, 0.30980393, 0.33333334, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.15686275, 0.30980393, 0.33333334, 1)
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_2lkpk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_fe14q")
+theme_override_styles/hover = SubResource("StyleBoxFlat_xegbm")
+theme_override_styles/focus = SubResource("StyleBoxFlat_vfm1w")
+text = "继续游戏"
+
+[node name="RestartButton" type="Button" parent="Interface/Control1/Overlay/CenterContainer1/VBoxContainer1" unique_id=2109208621]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_focus_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_pressed_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_hover_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.95686275, 0.9098039, 0.8039216, 1)
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_8sab2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_gqxib")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jewog")
+theme_override_styles/focus = SubResource("StyleBoxFlat_o5s08")
+text = "重新开始"
+
+[node name="HelpText" type="Label" parent="Interface/Control1/Overlay/CenterContainer1/VBoxContainer1" unique_id=1161177932]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6666667, 0.7647059, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0.11, 0.25, 0.31, 0.35)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_usicb")
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+
+[node name="TileWorld" parent="." instance=ExtResource("course")]

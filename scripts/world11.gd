@@ -3,8 +3,6 @@ const GPDPlatformSound: Script = preload("res://games/minigame/godot_party_defau
 const GPDPlatformShapes: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/shapes.gd")
 var party_input: PartyInput
 ## A grid-built 3D interpretation of the NES World 1-1 map.
-const DATA: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_data.gd")
-const BLOCK: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_block.gd")
 const ENEMY: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_enemy.gd")
 const ITEM: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_item.gd")
 const ART: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_assets.gd")
@@ -14,7 +12,8 @@ const CAMERA_DISTANCE: float = 16.0
 const CAMERA_FOV: float = 46.0
 @onready var player: Variant = $Player
 @onready var camera: Camera3D = $Camera3D
-var layout: Dictionary
+const Course: PackedScene = preload("res://games/minigame/godot_party_default_platformer/scenes/course.tscn")
+var spawn_point: Vector3
 var level: Node3D
 var enemies: Array[Node] = []
 var hidden_blocks: Array[Node] = []
@@ -29,30 +28,29 @@ var underground: bool = false
 var warping: bool = false
 var deaths: int = 0
 var elapsed: float = 0.0
-var score_label: Label
-var coin_label: Label
-var time_label: Label
-var life_label: Label
-var toast: Label
-var overlay: ColorRect
-var heading: Label
-var detail: Label
-var help_text: Label
-var resume_button: Button
-var restart_button: Button
-var pause_button: Button
-var cube_mesh: ArrayMesh
-var material_cache: Dictionary = {}
+@onready var score_label: Label = %ScoreLabel
+@onready var coin_label: Label = %CoinLabel
+@onready var time_label: Label = %TimeLabel
+@onready var life_label: Label = %LifeLabel
+@onready var toast: Label = %Toast
+@onready var overlay: ColorRect = %Overlay
+@onready var heading: Label = %Heading
+@onready var detail: Label = %Detail
+@onready var help_text: Label = %HelpText
+@onready var resume_button: Button = %ResumeButton
+@onready var restart_button: Button = %RestartButton
+@onready var pause_button: Button = %PauseButton
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
 	rng.seed = 1101
 	_setup_inputs()
-	cube_mesh = GPDPlatformShapes.chamfered_cube(0.025)
-	layout = DATA.layout()
-	_environment()
-	_build_level()
-	_build_ui()
+	spawn_point = player.position
+	level = $TileWorld
+	_activate_level()
+	pause_button.pressed.connect(set_paused.bind(true))
+	resume_button.pressed.connect(set_paused.bind(false))
+	restart_button.pressed.connect(restart)
 	player.jumped.connect(func() -> void: GPDPlatformSound.play(self,270,0.12,530,-25))
 	player.died.connect(respawn)
 	player.damaged.connect(func() -> void: GPDPlatformSound.play(self,420,0.18,150,-23))
@@ -77,174 +75,28 @@ func _camera_target(player_x: float) -> float:
 func _setup_inputs() -> void:
 	pass
 
-func _environment() -> void:
-	var environment: Environment = Environment.new()
-	environment.background_mode = Environment.BG_COLOR
-	environment.background_color = Color("73b9de")
-	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("d9edff")
-	environment.ambient_light_energy = 0.35
-	environment.tonemap_mode = Environment.TONE_MAPPER_LINEAR
-	$WorldEnvironment.environment = environment
-func _build_level() -> void:
-	level = Node3D.new()
-	level.name = "TileWorld"
-	add_child(level)
-	enemies.clear()
+func _activate_level() -> void:
+	flag = level.get_node("FinishFlag")
 	hidden_blocks.clear()
-	var ground: Node3D = Node3D.new()
-	ground.name = "GroundTiles"
-	level.add_child(ground)
-	var soil_backing: Node3D = Node3D.new()
-	soil_backing.name = "SoilBacking"
-	ground.add_child(soil_backing)
-	for segment: Variant in layout.ground:
-		# Non-colliding earth behind the seams, bounded to each real ground segment.
-		GPDPlatformShapes.box(soil_backing,Vector3((segment.x+segment.y)*0.5,-1.05,-0.46),Vector3(segment.y-segment.x,2.08,0.05),Color("90543a"))
-		for x: Variant in range(segment.x,segment.y):
-			for y: Variant in [-1,-2]:
-				var shade: Color = [Color("c98c54"),Color("c88a51"),Color("d49459")][posmod(x+y,3)]
-				tile_mesh(ground,Vector3(x+0.5,y+0.5,0),shade,"block-grass" if y == -1 else "brick")
-		_static_box(ground,Vector3((segment.x+segment.y)*0.5,-1,0),Vector3(segment.y-segment.x,2,1))
-	var stairs_root: Node3D = Node3D.new()
-	stairs_root.name = "StairTiles"
-	level.add_child(stairs_root)
-	for step: Variant in layout.stairs:
-		for y: Variant in step.y:
-			tile_mesh(stairs_root,Vector3(step.x+0.5,y+0.5,0),Color("b58154"))
-		_static_box(stairs_root,Vector3(step.x+0.5,step.y*0.5,0),Vector3(1,step.y,1))
-	var blocks_root: Node3D = Node3D.new()
-	blocks_root.name = "InteractiveBlocks"
-	level.add_child(blocks_root)
-	for cell: Variant in layout.blocks:
-		var block: Variant = BLOCK.new()
-		block.configure(cell,self)
-		block.name = "Block_%d_%d" % [cell.x,cell.y]
-		block.position = Vector3(cell.x+0.5,cell.y+0.5,0)
-		blocks_root.add_child(block)
-		if cell.hidden: hidden_blocks.append(block)
-	for pipe: Variant in layout.pipes: _pipe(pipe.x,pipe.height)
-	for entry: Variant in layout.enemies:
-		var enemy: Variant = ENEMY.new()
-		enemy.configure(entry.kind,self)
-		enemy.position = Vector3(entry.x+0.5,entry.get("y",0.05),0)
+	enemies.clear()
+	for block: StaticBody3D in level.get_node("InteractiveBlocks").get_children():
+		block.owner_game = self
+		if block.hidden:
+			hidden_blocks.append(block)
+	for spawn: Marker3D in level.get_node("EnemySpawns").get_children():
+		var enemy: CharacterBody3D = ENEMY.new()
+		enemy.configure(spawn.get_meta("kind"), self)
+		enemy.position = spawn.position
 		level.add_child(enemy)
 		enemies.append(enemy)
-	_scenery()
-	_goal()
-	_build_underground()
-func tile_mesh(parent: Node, point: Vector3, color: Color, asset: String = "brick") -> MeshInstance3D:
-	# Every terrain module still has the same 0.982-unit grid footprint.
-	var variant: Variant = "stone" if color == Color("637d90") else ""
-	return ART.make(parent,asset,point,Vector3.ONE*0.982,variant)
-func _static_box(parent: Node, point: Vector3, size: Vector3) -> StaticBody3D:
-	var body: StaticBody3D = StaticBody3D.new()
-	body.collision_layer = 2
-	body.collision_mask = 0
-	body.position = point
-	parent.add_child(body)
-	var collision: CollisionShape3D = CollisionShape3D.new()
-	var shape: BoxShape3D = BoxShape3D.new()
-	shape.size = size
-	collision.shape = shape
-	body.add_child(collision)
-	return body
-func _pipe(x: int, height: int) -> void:
-	var root: Node3D = Node3D.new()
-	root.name = "Pipe_%d" % x
-	root.position = Vector3(x+1,0,0)
-	level.add_child(root)
-	ART.make(root,"pipe",Vector3(0,height*0.5,0),Vector3(2,height,1.2),"pipe",float(height))
-	_static_box(root,Vector3(0,height*0.5,0),Vector3(2,height,1.2))
-func _scenery() -> void:
-	var decoration: Node3D = Node3D.new()
-	decoration.name = "Background"
-	level.add_child(decoration)
-	# Quiet, low-contrast distant silhouettes preserve readable gaps and jumps.
-	for x: Variant in [-2,22,47,72,97,122,147,172,197,222]:
-		var big: Variant = posmod(x,3) != 0
-		var mound: Variant = GPDPlatformShapes.sphere(decoration,Vector3(x,-2.0,-10),Vector3(14 if big else 10,9 if big else 6,3),Color("88beb0"))
-		mound.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		mound.material_override.disable_receive_shadows = true
-	for x: Variant in [8,32,57,81,106,131,156,181,206]:
-		for i: Variant in 3:
-			var cloud: Variant = GPDPlatformShapes.box(decoration,Vector3(x+i*1.5,8.7+sin(i*1.7)*0.45,-10),Vector3(2.2,1.1,1.1),Color("edf4e6"))
-			cloud.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			cloud.material_override.disable_receive_shadows = true
-	for x: Variant in [10,34,53,76,98,119,141,165,190]:
-		var tree: Variant = ART.make(decoration,"tree",Vector3(x,2.15,-5.4),Vector3(2.4,4.3,2.4),"distant")
-		tree.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		var pine: Variant = ART.make(decoration,"tree-pine-small",Vector3(x+3.0,1.2,-5.8),Vector3(1.25,2.4,1.25),"distant")
-		pine.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	for x: Variant in [13,24,55,73,96,121,145,172,193]:
-		var hedge: Variant = ART.make(decoration,"hedge",Vector3(x,0.36,-2.4),Vector3(3.0,0.72,0.65))
-		hedge.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		ART.make(decoration,"flowers",Vector3(x-2.0,0.22,-1.4),Vector3(0.60,0.44,0.35))
-		ART.make(decoration,"rocks",Vector3(x+2.0,0.30,-2.7),Vector3(0.85,0.60,0.65))
-	# Align scenery feet with the projected Y=0 ground despite their rear depth.
-	# Camera remains at zero pitch/yaw/roll; background receives no collision.
-	for mesh: Variant in decoration.get_children():
-		if mesh is MeshInstance3D and mesh.has_meta("source_asset"):
-			mesh.position.y += mesh.position.z * CAMERA_HEIGHT / CAMERA_DISTANCE
-func _goal() -> void:
-	GPDPlatformShapes.cylinder(level,Vector3(198.5,5.5,0),0.045,9,Color("e7dfb5"))
-	GPDPlatformShapes.sphere(level,Vector3(198.5,10.06,0),Vector3.ONE*0.25,Color("e9be50"))
-	flag = ART.make(level,"flag-cloth",Vector3(197.85,9.3,0),Vector3(1.25,0.72,0.10))
-	flag.rotation.y = PI
-	var castle: Node3D = Node3D.new()
-	castle.name = "Castle"
-	level.add_child(castle)
-	for x: Variant in range(202,207):
-		for y: Variant in 3:
-			if x == 204 and y < 2: continue
-			tile_mesh(castle,Vector3(x+0.5,y+0.5,-0.5),Color("bc8457"))
-	for x: Variant in [202,204,206]: tile_mesh(castle,Vector3(x+0.5,3.5,-0.5),Color("c9915b"))
-	for x: Variant in [203,204,205]: tile_mesh(castle,Vector3(x+0.5,4.5,-0.9),Color("c9915b"))
-	GPDPlatformShapes.box(castle,Vector3(204.5,1,-1.05),Vector3(1,2,0.1),Color("3e4650"))
-	ART.make(castle,"door-open",Vector3(204.5,1.05,0.06),Vector3(1.32,2.1,0.26))
-	for x: Variant in [203.5,205.5]: GPDPlatformShapes.box(castle,Vector3(x,2.6,0.02),Vector3(0.30,0.52,0.03),Color("4d4e49"))
-func _build_underground() -> void:
-	var room: Node3D = Node3D.new()
-	room.name = "BonusRoom"
-	level.add_child(room)
-	# Separate room, beyond the overworld: no inherited garden route or islands.
-	for x: Variant in range(300,316):
-		for y: Variant in [-1,-2]: tile_mesh(room,Vector3(x+0.5,y+0.5,0),Color("637d90"))
-	_static_box(room,Vector3(308,-1,0),Vector3(16,2,1))
-	for x: Variant in range(304,311): tile_mesh(room,Vector3(x+0.5,10.5,0),Color("637d90"))
-	_static_box(room,Vector3(307.5,10.5,0),Vector3(7,1,1))
-	var backdrop: Variant = GPDPlatformShapes.box(room,Vector3(308,5,-1.5),Vector3(40,20,0.3),Color("263b56"))
-	backdrop.material_override.disable_receive_shadows = true
-	backdrop.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	for x: Variant in [300,315]:
-		for y: Variant in 11: tile_mesh(room,Vector3(x+0.5,y+0.5,0),Color("637d90"))
-		_static_box(room,Vector3(x+0.5,5.5,0),Vector3(1,11,1))
-	for x: Variant in range(304,311):
-		for y: Variant in 3: tile_mesh(room,Vector3(x+0.5,y+0.5,0),Color("637d90"))
-		_static_box(room,Vector3(x+0.5,1.5,0),Vector3(1,3,1))
-	for row: Variant in [3.5,5.5,7.5]:
-		for x: Variant in range(304,311):
-			if row == 7.5 and x in [304,310]: continue
-			_room_coin(room,Vector3(x+0.5,row,0))
-	var exit_pipe: Variant = ART.make(room,"pipe",Vector3(313.8,1.0,0),Vector3(2.0,2.0,1.1),"pipe",2.0)
-	exit_pipe.rotation.z = PI/2
-	_static_box(room,Vector3(314.25,1,0),Vector3(1.5,2,1.1))
-func _room_coin(parent: Node, point: Vector3) -> void:
-	var area: Area3D = Area3D.new()
-	area.position = point
-	area.collision_layer = 0
-	area.collision_mask = 1
-	parent.add_child(area)
-	var shape: SphereShape3D = SphereShape3D.new()
-	shape.radius = 0.43
-	var col: CollisionShape3D = CollisionShape3D.new()
-	col.shape = shape
-	area.add_child(col)
-	ART.make(area,"coin-gold",Vector3.ZERO,Vector3(0.54,0.54,0.18))
-	area.body_entered.connect(func(body: Node):
-		if body == player:
-			add_coin()
-			area.queue_free())
+	for coin: Area3D in level.get_node("BonusRoom").find_children("*", "Area3D", true, false):
+		coin.body_entered.connect(_collect_room_coin.bind(coin))
+
+func _collect_room_coin(body: Node3D, coin: Area3D) -> void:
+	if body == player:
+		add_coin()
+		coin.queue_free()
+
 func _physics_process(delta: float) -> void:
 	_update_ui()
 	if won or dying or warping: return
@@ -328,10 +180,12 @@ func respawn() -> void:
 		return
 	remove_child(level)
 	level.queue_free()
-	_build_level()
+	level = Course.instantiate()
+	add_child(level)
+	_activate_level()
 	underground = false
 	warping = false
-	player.reset_at(Vector3(2.5,0.1,0))
+	player.reset_at(spawn_point)
 	camera.position.x = _camera_min_x()
 	dying = false
 	_show_toast("剩余生命 × %d" % lives)
@@ -386,106 +240,6 @@ func finish() -> void:
 	pause_button.hide()
 	overlay.show()
 	restart_button.grab_focus()
-func _label(text: String, font_size: int, color: Color = Color("fff5d9")) -> Label:
-	var label: Label = Label.new()
-	label.text = text
-	label.add_theme_font_override("font",UI_FONT)
-	label.add_theme_font_size_override("font_size",font_size)
-	label.add_theme_color_override("font_color",color)
-	label.add_theme_color_override("font_shadow_color",Color(0.11,0.25,0.31,0.35))
-	label.add_theme_constant_override("shadow_offset_y",2)
-	return label
-func _stat(parent: Node, caption: String, value: String) -> Label:
-	var stack: VBoxContainer = VBoxContainer.new()
-	stack.add_theme_constant_override("separation",1)
-	parent.add_child(stack)
-	var title: Variant = _label(caption,13)
-	stack.add_child(title)
-	var number: Variant = _label(value,28)
-	stack.add_child(number)
-	return number
-func _build_ui() -> void:
-	var canvas: CanvasLayer = CanvasLayer.new()
-	canvas.name = "Interface"
-	canvas.process_mode = Node.PROCESS_MODE_INHERIT
-	add_child(canvas)
-	var ui: Control = Control.new()
-	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# ui.set_script(preload("res://games/minigame/godot_party_default_platformer/scripts/world11_ui_input.gd"))
-
-	canvas.add_child(ui)
-	var margin: MarginContainer = MarginContainer.new()
-	margin.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	for side: Variant in ["left","right"]: margin.add_theme_constant_override("margin_"+side,38)
-	margin.add_theme_constant_override("margin_top",25)
-	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	ui.add_child(margin)
-	var row: HBoxContainer = HBoxContainer.new()
-	row.add_theme_constant_override("separation",46)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(row)
-	score_label = _stat(row,"SCORE","000000")
-	coin_label = _stat(row,"COINS","× 00")
-	var spring: Control = Control.new()
-	spring.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(spring)
-	_stat(row,"WORLD","1-1")
-	var spring2: Control = Control.new()
-	spring2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(spring2)
-	life_label = _stat(row,"LIVES","× 3")
-	time_label = _stat(row,"TIME","400")
-	pause_button = _button("Ⅱ",false)
-	pause_button.custom_minimum_size = Vector2(46,46)
-	pause_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_child(pause_button)
-	pause_button.pressed.connect(func() -> void:set_paused(true))
-	toast = _label("",16)
-	toast.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	toast.position = Vector2(-350,105)
-	toast.size.x = 700
-	toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ui.add_child(toast)
-	overlay = ColorRect.new()
-	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.color = Color(0.07,0.16,0.23,0.93)
-	ui.add_child(overlay)
-	var center: CenterContainer = CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.add_child(center)
-	var column: VBoxContainer = VBoxContainer.new()
-	column.custom_minimum_size.x = 440
-	column.add_theme_constant_override("separation",22)
-	center.add_child(column)
-	var eyebrow: Variant = _label("CLOUDSTEP  /  WORLD 1-1",15,Color("9ac9d1"))
-	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(eyebrow)
-	heading = _label("暂停",50)
-	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(heading)
-	detail = _label("",20,Color("c7d9d9"))
-	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(detail)
-	resume_button = _button("继续游戏")
-	column.add_child(resume_button)
-	resume_button.pressed.connect(func() -> void:set_paused(false))
-	restart_button = _button("重新开始",false)
-	column.add_child(restart_button)
-	restart_button.pressed.connect(restart)
-	help_text = _label("",15,Color("aac3cc"))
-	help_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(help_text)
-	overlay.hide()
-func _button(text: String, primary: bool = true) -> Button:
-	var button: Button = Button.new()
-	button.text = text
-	button.custom_minimum_size.y = 52
-	button.add_theme_font_override("font",UI_FONT)
-	button.add_theme_font_size_override("font_size",19)
-	_button_palette(button,primary)
-	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	return button
 func _button_palette(button: Button, primary: bool) -> void:
 	for state: Variant in ["normal","hover","pressed","focus"]:
 		var style: StyleBoxFlat = StyleBoxFlat.new()

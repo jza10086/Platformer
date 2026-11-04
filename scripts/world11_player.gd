@@ -34,25 +34,8 @@ var squash: Variant = Vector3.ONE
 var facing: float = 1.0
 
 func _ready() -> void:
-	collision_layer = 1
-	collision_mask = 2
-	floor_snap_length = 0.12
-	floor_stop_on_slope = true
-	collision = CollisionShape3D.new()
-	var box: BoxShape3D = BoxShape3D.new()
-	box.size = Vector3(0.78, height, 0.78)
-	collision.shape = box
-	collision.position.y = height * 0.5
-	add_child(collision)
-	visual = Node3D.new()
-	add_child(visual)
-	GPDPlatformShapes.box(visual, Vector3(0, 0.45, 0), Vector3(0.90, 0.90, 0.90), Color("ef795f"))
-	GPDPlatformShapes.box(visual, Vector3(0, 0.82, 0), Vector3(0.90, 0.13, 0.90), Color("ffb884"))
-	GPDPlatformShapes.box(visual, Vector3(0, 0.12, 0), Vector3(0.90, 0.16, 0.90), Color("c2504c"))
-	for x: Variant in [-0.17, 0.17]:
-		GPDPlatformShapes.box(visual, Vector3(x, 0.52, 0.46), Vector3(0.12, 0.19, 0.035), Color("fff4dd"))
-		GPDPlatformShapes.box(visual, Vector3(x + 0.025, 0.52, 0.48), Vector3(0.047, 0.10, 0.018), Color("344b59"))
-	GPDPlatformShapes.box(visual, Vector3(0, 0.30, 0.46), Vector3(0.14, 0.04, 0.03), Color("8e4646"))
+	collision = $Collision
+	visual = $Visual
 	previous_position = global_position
 	_update_size()
 

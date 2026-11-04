@@ -33,3 +33,9 @@ msgstr "跳跃"
 
 msgid "进入水管"
 msgstr "进入水管"
+
+msgid "hud.time"
+msgstr "云间跃行 · 剩余 {time} 秒{spectator}"
+
+msgid "hud.player"
+msgstr "{player}  {score} 分  {state}"
