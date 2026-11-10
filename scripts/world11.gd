@@ -1,18 +1,18 @@
 extends Node3D
-const GPDPlatformSound: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/sound.gd")
-const GPDPlatformShapes: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/shapes.gd")
+const GPDPlatformSound: Script = preload("res://games/minigame/gp_platformer/scripts/sound.gd")
+const GPDPlatformShapes: Script = preload("res://games/minigame/gp_platformer/scripts/shapes.gd")
 var party_input: PartyInput
 ## A grid-built 3D interpretation of the NES World 1-1 map.
-const ENEMY: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_enemy.gd")
-const ITEM: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_item.gd")
-const ART: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_assets.gd")
-const UI_FONT: Resource = preload("res://games/minigame/godot_party_default_platformer/assets/fonts/NotoSansCJK.ttc")
+const ENEMY: Script = preload("res://games/minigame/gp_platformer/scripts/world11_enemy.gd")
+const ITEM: Script = preload("res://games/minigame/gp_platformer/scripts/world11_item.gd")
+const ART: Script = preload("res://games/minigame/gp_platformer/scripts/world11_assets.gd")
+const UI_FONT: Resource = preload("res://games/minigame/gp_platformer/assets/fonts/NotoSansCJK.ttc")
 const CAMERA_HEIGHT: float = 5.0
 const CAMERA_DISTANCE: float = 16.0
 const CAMERA_FOV: float = 46.0
 @onready var player: Variant = $Player
 @onready var camera: Camera3D = $Camera3D
-const Course: PackedScene = preload("res://games/minigame/godot_party_default_platformer/scenes/course.tscn")
+const Course: PackedScene = preload("res://games/minigame/gp_platformer/scenes/course.tscn")
 var spawn_point: Vector3
 var level: Node3D
 var enemies: Array[Node] = []

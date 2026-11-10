@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bs0s8ht81etuw"
-path="res://.godot/imported/NotoSansCJK.ttc-ad9d3f0746a15a3bfa5767e706940d71.fontdata"
+path="res://.godot/imported/NotoSansCJK.ttc-90867cf6ab3ea16dac412630f7f4e110.fontdata"
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_platformer/assets/fonts/NotoSansCJK.ttc"
-dest_files=["res://.godot/imported/NotoSansCJK.ttc-ad9d3f0746a15a3bfa5767e706940d71.fontdata"]
+source_file="res://games/minigame/gp_platformer/assets/fonts/NotoSansCJK.ttc"
+dest_files=["res://.godot/imported/NotoSansCJK.ttc-90867cf6ab3ea16dac412630f7f4e110.fontdata"]
 
 [params]
 

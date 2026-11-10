@@ -1,5 +1,5 @@
 extends StaticBody3D
-const GPDPlatformSound: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/sound.gd")
+const GPDPlatformSound: Script = preload("res://games/minigame/gp_platformer/scripts/sound.gd")
 ## One grid cell. Its render module and collider occupy precisely one tile.
 @export var kind: String = "brick"
 @export var reward: String = ""

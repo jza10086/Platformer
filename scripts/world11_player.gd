@@ -1,5 +1,5 @@
 extends CharacterBody3D
-const GPDPlatformShapes: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/shapes.gd")
+const GPDPlatformShapes: Script = preload("res://games/minigame/gp_platformer/scripts/shapes.gd")
 var party_input: PartyInput
 var jump_was_pressed: bool = false
 ## Feet-origin, single-plane platforming controller for the block-scale course.

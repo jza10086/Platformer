@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://drqxjofgl4f6k"
-path="res://.godot/imported/flag.glb-09738d37ef440527dae5c806d1e99bda.scn"
+path="res://.godot/imported/flag.glb-4d4878cebb63b1cbe19fa4ad078ba846.scn"
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/flag.glb"
-dest_files=["res://.godot/imported/flag.glb-09738d37ef440527dae5c806d1e99bda.scn"]
+source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/flag.glb"
+dest_files=["res://.godot/imported/flag.glb-4d4878cebb63b1cbe19fa4ad078ba846.scn"]
 
 [params]
 

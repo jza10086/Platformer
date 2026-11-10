@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://deoks665cwdbi"
-path.s3tc="res://.godot/imported/colormap.png-78aebfdafc71f3ec178663fa317cab92.s3tc.ctex"
+path.s3tc="res://.godot/imported/colormap.png-204e95215a6361c1835e63aac39f1b9f.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-78aebfdafc71f3ec178663fa317cab92.s3tc.ctex"]
+source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/Textures/colormap.png"
+dest_files=["res://.godot/imported/colormap.png-204e95215a6361c1835e63aac39f1b9f.s3tc.ctex"]
 
 [params]
 

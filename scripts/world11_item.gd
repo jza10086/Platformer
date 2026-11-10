@@ -1,7 +1,7 @@
 extends CharacterBody3D
 ## Block rewards with their own motion and single-use pickup handling.
 signal picked_up(mode)
-const ART: Script = preload("res://games/minigame/godot_party_default_platformer/scripts/world11_assets.gd")
+const ART: Script = preload("res://games/minigame/gp_platformer/scripts/world11_assets.gd")
 const GRAVITY: float = 24.0
 var mode: String = "mushroom"
 var owner_game: Node

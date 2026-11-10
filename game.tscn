@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bio7e67yy0duf"]
 
-[ext_resource type="Script" uid="uid://bttdp51ngwmr7" path="res://games/minigame/godot_party_default_platformer/game.gd" id="1_4oopl"]
+[ext_resource type="Script" uid="uid://bttdp51ngwmr7" path="res://games/minigame/gp_platformer/game.gd" id="1_4oopl"]
 
-[ext_resource type="PackedScene" path="res://games/minigame/godot_party_default_platformer/scenes/world11.tscn" id="world"]
+[ext_resource type="PackedScene" path="res://games/minigame/gp_platformer/scenes/world11.tscn" id="world"]
 [ext_resource type="PackedScene" path="res://games/protocols/godot_party_default_protocol/challenge_hud.tscn" id="hud"]
 
 [node name="Game" type="Node3D" groups=["party_minimal_hud"] unique_id=1490176572]

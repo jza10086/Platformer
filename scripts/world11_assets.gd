@@ -2,7 +2,7 @@ extends RefCounted
 ## Visual-only adapters for Kenney Platformer Kit 4.1 (CC0).
 ## Geometry is normalized from its actual imported AABB. Nothing here creates
 ## collision bodies or changes the level grid, player, camera, or game rules.
-const DIRECTORY: String = "res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/"
+const DIRECTORY: String = "res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/"
 static var mesh_cache: Dictionary = {}
 static var material_cache: Dictionary = {}
 static var palette_image: Image

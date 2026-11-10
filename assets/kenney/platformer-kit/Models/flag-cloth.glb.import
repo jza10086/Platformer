@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bscjfn1350v7n"
-path="res://.godot/imported/flag-cloth.glb-78ca99e8e14cc7e8462ccdc9da85e3fe.scn"
+path="res://.godot/imported/flag-cloth.glb-96c62367c10f99a793f52dd65663d054.scn"
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_platformer/assets/kenney/platformer-kit/Models/flag-cloth.glb"
-dest_files=["res://.godot/imported/flag-cloth.glb-78ca99e8e14cc7e8462ccdc9da85e3fe.scn"]
+source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/flag-cloth.glb"
+dest_files=["res://.godot/imported/flag-cloth.glb-96c62367c10f99a793f52dd65663d054.scn"]
 
 [params]
 
