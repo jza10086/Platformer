@@ -13,6 +13,11 @@ var submitted: bool = false
 var elapsed: float = 0.0
 var deadline: float = 90.0
 var report_clock: float = 0.0
+var _end_msec: int = 0
+var _sent_score: int = -1
+var _sent_won: bool = false
+var _published_records: Dictionary = {}
+var _display_records: Dictionary = {}
 var records: Dictionary = {}
 const StandingRow: PackedScene = preload("res://games/protocols/godot_party_default_protocol/standing_row.tscn")
 var score_rows: Dictionary[String, Label] = {}
@@ -67,6 +72,8 @@ func party_start() -> void:
 
 func _start_gameplay() -> void:
 	running = true
+	if api.is_host():
+		_end_msec = api.net.host_time_msec() + roundi(deadline * 1000.0)
 	if game != null and not local_id.is_empty():
 		game.process_mode = Node.PROCESS_MODE_INHERIT
 		game.rng.seed = api.get_seed()
@@ -84,7 +91,7 @@ func party_stop(_reason: StringName) -> void:
 func _process(delta: float) -> void:
 	if not running:
 		return
-	elapsed += delta
+	elapsed = maxf(0.0, deadline - float(_end_msec - api.net.host_time_msec()) / 1000.0) if _end_msec > 0 else elapsed + delta
 	round_label.text = api.i18n.text(&"hud.time", {"time": maxi(0, ceili(deadline - elapsed)), "spectator": " · 观战中" if local_id.is_empty() else ""})
 	if game != null and not submitted and not local_id.is_empty():
 		var ended: bool = (game.won or game.lives <= 0) if IS_PLATFORM else game.state == game.State.OVER
@@ -94,13 +101,19 @@ func _process(delta: float) -> void:
 			submitted = true
 			game.process_mode = Node.PROCESS_MODE_DISABLED
 			_send_progress(true)
+			if not running:
+				return
 	report_clock += delta
 	if report_clock >= 0.25:
 		report_clock = 0.0
 		if game != null and not submitted and not local_id.is_empty():
 			_send_progress(false)
+			if not running:
+				return
 		if api.is_host():
 			_publish()
+			if not running:
+				return
 	if api.is_host():
 		var all_done: bool = true
 		for id: String in records:
@@ -110,8 +123,17 @@ func _process(delta: float) -> void:
 			_finish()
 
 func _send_progress(done: bool) -> void:
+	var won: bool = bool(game.won) if IS_PLATFORM else false
+	if not done and int(game.score) == _sent_score and won == _sent_won:
+		return
 	sequence += 1
-	api.net.send_to_host(&"progress", {"seq": sequence, "score": int(game.score), "won": bool(game.won) if IS_PLATFORM else false, "done": done, "elapsed": minf(elapsed, deadline)})
+	var error: Error = api.net.send_to_host(&"progress", {"seq": sequence, "score": int(game.score), "won": won, "done": done, "elapsed": minf(elapsed, deadline)})
+	if error != OK:
+		party_stop(&"progress_send_failed")
+		api.fail("progress_send_failed", error_string(error))
+		return
+	_sent_score = int(game.score)
+	_sent_won = won
 
 func _message(sender: Dictionary, topic: StringName, payload: Variant) -> void:
 	if not running or not payload is Dictionary:
@@ -141,12 +163,40 @@ func _players_changed() -> void:
 			records[player.player_id].withdrawn = true
 
 func _publish() -> void:
-	if api.is_host():
-		api.net.broadcast(&"standings", {"records": records.duplicate(true)})
+	if not api.is_host():
+		return
+	var changed: Dictionary = {}
+	for id: String in records:
+		var row: Dictionary = records[id]
+		var public: Dictionary = {"score": row.score, "won": row.won, "done": row.done, "withdrawn": row.withdrawn}
+		if not _published_records.has(id) or _published_records[id] != public:
+			changed[id] = public
+	if changed.is_empty():
+		return
+	var message: Dictionary = {"records": changed}
+	if _published_records.is_empty():
+		message["end_msec"] = _end_msec
+	var error: Error = api.net.broadcast(&"standings", message)
+	if error == OK:
+		_published_records.merge(changed, true)
+	else:
+		party_stop(&"standings_send_failed")
+		api.fail("standings_send_failed", error_string(error))
 
 func _show_standings(value: Dictionary) -> void:
+	if not value.get("records") is Dictionary:
+		return
+	if value.has("end_msec"):
+		if not value.end_msec is int:
+			return
+		_end_msec = value.end_msec
+	for id: Variant in value.records:
+		var row: Variant = value.records[id]
+		if not id is String or not records.has(id) or not row is Dictionary or not row.get("score") is int or row.score < 0 or not row.get("won") is bool or not row.get("done") is bool or not row.get("withdrawn") is bool:
+			return
+		_display_records[id] = row
 	for player: Dictionary in players:
-		var row: Dictionary = value.get("records", {}).get(player.player_id, {})
+		var row: Dictionary = _display_records.get(player.player_id, {})
 		var caption: String = api.i18n.text(&"hud.player", {"player": player.name, "score": row.get("score", 0), "state": "已退出" if row.get("withdrawn", false) else ("已完成" if row.get("done", false) else "挑战中")})
 		if score_rows[player.player_id].text != caption:
 			score_rows[player.player_id].text = caption

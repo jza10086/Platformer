@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "core_api_major": 4,
-  "package_version": "1.0.4",
+  "core_api_major": 5,
+  "package_version": "1.0.6",
   "id": "godot_party_default_platformer",
   "name": "GodotPartyDefault · 云间跃行",
   "kind": "minigame",
@@ -20,7 +20,7 @@
     "original"
   ],
   "dependencies": {
-    "godot_party_default_protocol": "1.0.4"
+    "godot_party_default_protocol": "1.0.6"
   },
   "adapters": [
     {
