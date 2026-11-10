@@ -1,10 +1,11 @@
 {
   "manifest_version": 2,
   "core_api_major": 5,
-  "package_version": "1.0.6",
+  "package_version": "1.0.7",
   "id": "godot_party_default_platformer",
   "name": "GodotPartyDefault · 云间跃行",
   "kind": "minigame",
+  "supported_systems": ["windows"],
   "introduction": "在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。",
   "entry": "game.tscn",
   "player_counts": [
@@ -20,7 +21,7 @@
     "original"
   ],
   "dependencies": {
-    "godot_party_default_protocol": "1.0.6"
+    "godot_party_default_protocol": "1.0.7"
   },
   "adapters": [
     {
