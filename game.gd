@@ -2,7 +2,7 @@ extends Node3D
 ## Local responsive simulation; host accepts bounded progress and publishes one result.
 const IS_PLATFORM: bool = true
 const Pages = preload("res://games/protocols/godot_party_default_protocol/round_pages.gd")
-var pages: Pages
+@export var pages: Pages
 var api: PartyAPI
 var request: Dictionary
 var players: Array[Dictionary] = []
@@ -62,7 +62,7 @@ func _ready() -> void:
 		score_rows[player.player_id] = row
 		row.text = player.name
 	round_label.text = "等待所有玩家准备完成"
-	pages = Pages.new()
+	assert(pages != null, "Assign ProtocolPages in the game scene")
 	var ready_error: Error = pages.prepare(self, api, request, _start_gameplay)
 	if ready_error != OK:
 		api.fail("load_failed", error_string(ready_error))
