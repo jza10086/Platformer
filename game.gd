@@ -1,4 +1,9 @@
 extends Node3D
+
+## Content-owned gameplay rules, independent of package compatibility.
+static func party_definition() -> Dictionary:
+	return {"player_counts": [2, 3, 4, 5, 6, 7, 8], "tags": ["original"]}
+
 ## Local responsive simulation; host accepts bounded progress and publishes one result.
 const IS_PLATFORM: bool = true
 const Pages = preload("res://games/protocols/godot_party_default_protocol/round_pages.gd")

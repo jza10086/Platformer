@@ -9,3 +9,5 @@ A/D 或方向键移动，Space/W 跳跃，Shift/X 加速，S/下方向键进入�
 观战者看到关卡及实时分数榜，当前不转播参赛者的逐帧角色位置。只支持 standard 普通局，没有资源下注或道具效果。
 
 保留的是 temp_game/Platformer 的默认 World 1-1 关卡，未搬入旧云上花园关卡。地图参考来源及 Kenney Platformer Kit 许可证见 ASSET_SOURCES.md 与 assets/kenney/platformer-kit/；字体许可证随 third_party/ 保留。配色适配支持主工程的压缩纹理导入。
+
+在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。
