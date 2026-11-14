@@ -11,3 +11,10 @@ A/D 或方向键移动，Space/W 跳跃，Shift/X 加速，S/下方向键进入�
 保留的是 temp_game/Platformer 的默认 World 1-1 关卡，未搬入旧云上花园关卡。地图参考来源及 Kenney Platformer Kit 许可证见 ASSET_SOURCES.md 与 assets/kenney/platformer-kit/；字体许可证随 third_party/ 保留。配色适配支持主工程的压缩纹理导入。
 
 在浮岛间移动和跳跃，收集物品并抵达终点。实时榜展示本轮成绩。
+
+## 包内开发文档
+
+未带 `res://` 的源码路径以本包根目录为基准。
+
+- [美术资产来源与改动记录](gp_platformer_asset_sources.md)
+- [M08 云间跃行　A/B　依赖 G01、G03](gp_platformer_development.md)

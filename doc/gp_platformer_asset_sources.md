@@ -1,5 +1,7 @@
 # 美术资产来源与改动记录
 
+素材文件名与未展开的相对路径以包根目录为基准。
+
 本次环境与道具美术更新采用 **Kenney Platformer Kit 4.1** 的统一低模风格。玩家 Cube、敌人、地图坐标、碰撞体、相机和游戏规则保持原有实现。工程已包含运行需要的模型和纹理，无需联网下载。
 
 ## 1. Kenney Platformer Kit
@@ -11,13 +13,13 @@
 - 官方下载地址：https://kenney.nl/media/pages/assets/platformer-kit/1585cf62b4-1775122253/kenney_platformer-kit.zip
 - 许可证：**Creative Commons Zero 1.0 Universal（CC0 1.0）**。
 - 许可证说明：https://creativecommons.org/publicdomain/zero/1.0/
-- 原包 `License.txt` 原样保留于 [`assets/kenney/platformer-kit/License.txt`](assets/kenney/platformer-kit/License.txt)。CC0 允许个人、教育及商业使用；这里自愿注明作者。
+- 原包 `License.txt` 原样保留于 [`assets/kenney/platformer-kit/License.txt`](../assets/kenney/platformer-kit/License.txt)。CC0 允许个人、教育及商业使用；这里自愿注明作者。
 - 官方 ZIP：4,640,135 bytes；SHA-256：`899605d237367688c6b42e41fff2206c0fb8d626163158294556353f7baa7c1b`。
 - 工程只包含实际需要的模型、派生来源和纹理，没有带入整包的角色模型、FBX、OBJ、HTML、URL 快捷方式或压缩包。
 
 ### 选用文件与用途
 
-模型均位于 `assets/kenney/platformer-kit/Models/`。原始 GLB 与原始纹理未改写；每个文件的 SHA-256、上游路径、用途及来源范围见 [`assets/kenney/platformer-kit/manifest.json`](assets/kenney/platformer-kit/manifest.json)。
+模型均位于 `assets/kenney/platformer-kit/Models/`。原始 GLB 与原始纹理未改写；每个文件的 SHA-256、上游路径、用途及来源范围见 [`assets/kenney/platformer-kit/manifest.json`](../assets/kenney/platformer-kit/manifest.json)。
 
 | 原文件 | 工程中的用途 | 视觉适配 |
 | --- | --- | --- |
@@ -40,7 +42,7 @@
 - `Models/mushroom-single.glb`：仅提取 `mushrooms.glb` 中最高一朵蘑菇的两个连通几何部分（帽与柄），未重新绘制；出生、移动、拾取、成长与加命逻辑保持原样。普通奖励使用原红色，加命奖励仅将帽的暖色调改为绿色。
 - `Models/flag-cloth.glb`：仅提取 `flag.glb` 中旗布的连通几何部分，使降旗时旗杆不跟随移动。
 - 生成工具保留在原型 `temp_game/Platformer/tools/derive_platformer_assets.py`；本包随附派生结果与源模型，运行无需生成工具。
-- 运行时适配器：[`scripts/world11_assets.gd`](scripts/world11_assets.gd)。从源 mesh 的实际 AABB 居中、归一，再设置明确视觉尺寸；保留 UV 和原图集。适配器仅创建 MeshInstance3D，不创建或修改任何碰撞体。
+- 运行时适配器：[`scripts/world11_assets.gd`](../scripts/world11_assets.gd)。从源 mesh 的实际 AABB 居中、归一，再设置明确视觉尺寸；保留 UV 和原图集。适配器仅创建 MeshInstance3D，不创建或修改任何碰撞体。
 - 已用方块在原位置更新 mesh/material；隐藏方块仍按原条件显示；撞碎、顶起、金币弹出和奖励状态均由原逻辑驱动。
 - 地面仍由 402 个独立等尺寸视觉格子构成；不会合成一整片地形或用装饰跨过三个真实缺口。
 - 模型资产与派生物继续按 CC0 使用；工程 MIT 许可不改变这些上游资产的许可。
@@ -55,7 +57,7 @@
 ## 3. 既有字体
 
 - **Noto Sans CJK**，上游：https://github.com/notofonts/noto-cjk 。
-- 许可证：SIL Open Font License 1.1；原文见 [`third_party/Noto-LICENSE.txt`](third_party/Noto-LICENSE.txt)。
+- 许可证：SIL Open Font License 1.1；原文见 [`third_party/Noto-LICENSE.txt`](../third_party/Noto-LICENSE.txt)。
 - 文件：`assets/fonts/NotoSansCJK.ttc`；用途：中文 UI。本轮没有替换、修改或重新下载该字体。
 
 ## 4. 布局参考与版权边界
