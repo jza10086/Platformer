@@ -8,7 +8,7 @@ path="res://.godot/imported/brick.glb-694391346c07e99468bf35e3cb07a04d.scn"
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/brick.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/brick.glb"
 dest_files=["res://.godot/imported/brick.glb-694391346c07e99468bf35e3cb07a04d.scn"]
 
 [params]

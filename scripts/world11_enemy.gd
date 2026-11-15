@@ -1,5 +1,5 @@
 extends CharacterBody3D
-const GPDPlatformShapes: Script = preload("res://games/minigame/gp_platformer/scripts/shapes.gd")
+const GPDPlatformShapes: Script = preload("res://games/minigame/GP_platformer/scripts/shapes.gd")
 ## Original cuboid critters. Contact is resolved independently of world collision.
 signal defeated(enemy)
 const GRAVITY: float = 28.0

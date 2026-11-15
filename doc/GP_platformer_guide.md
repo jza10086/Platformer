@@ -16,5 +16,5 @@ A/D 或方向键移动，Space/W 跳跃，Shift/X 加速，S/下方向键进入�
 
 未带 `res://` 的源码路径以本包根目录为基准。
 
-- [美术资产来源与改动记录](gp_platformer_asset_sources.md)
-- [M08 云间跃行　A/B　依赖 G01、G03](gp_platformer_development.md)
+- [美术资产来源与改动记录](GP_platformer_asset_sources.md)
+- [M08 云间跃行　A/B　依赖 G01、G03](GP_platformer_development.md)

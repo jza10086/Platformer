@@ -39,3 +39,6 @@ msgstr "云间跃行 · 剩余 {time} 秒{spectator}"
 
 msgid "hud.player"
 msgstr "{player}  {score} 分  {state}"
+
+msgid "package.name"
+msgstr "GodotPartyDefault · 云间跃行"

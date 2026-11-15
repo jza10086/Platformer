@@ -8,7 +8,7 @@ path="res://.godot/imported/door-open.glb-e922276d4b8c09ddbad58dbd1669da7a.scn"
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/door-open.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/door-open.glb"
 dest_files=["res://.godot/imported/door-open.glb-e922276d4b8c09ddbad58dbd1669da7a.scn"]
 
 [params]

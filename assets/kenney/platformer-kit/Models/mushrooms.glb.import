@@ -8,7 +8,7 @@ path="res://.godot/imported/mushrooms.glb-e46a831488a67a33bdad6e258f942d41.scn"
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/mushrooms.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/mushrooms.glb"
 dest_files=["res://.godot/imported/mushrooms.glb-e46a831488a67a33bdad6e258f942d41.scn"]
 
 [params]

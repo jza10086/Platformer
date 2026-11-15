@@ -2,7 +2,7 @@ extends Node3D
 
 ## Local responsive simulation; host accepts bounded progress and publishes one result.
 const IS_PLATFORM: bool = true
-const Pages = preload("res://games/protocols/godot_party_default_protocol/round_pages.gd")
+const Pages = preload("res://games/protocols/GP_default_protocol/round_pages.gd")
 @export var pages: Pages
 var api: PartyAPI
 var request: Dictionary
@@ -20,7 +20,7 @@ var _sent_won: bool = false
 var _published_records: Dictionary = {}
 var _display_records: Dictionary = {}
 var records: Dictionary = {}
-const StandingRow: PackedScene = preload("res://games/assets/godot_party_default_ui/standing_row.tscn")
+const StandingRow: PackedScene = preload("res://games/assets/GP_default_ui/standing_row.tscn")
 var score_rows: Dictionary[String, Label] = {}
 @onready var summary: VBoxContainer = $ChallengeHUD/Status/Rankings
 @onready var round_label: Label = $ChallengeHUD/Status/RoundClock

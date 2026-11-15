@@ -8,7 +8,7 @@ path="res://.godot/imported/flowers.glb-69ceb54e0caf5960db7789d464ef993a.scn"
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/flowers.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/flowers.glb"
 dest_files=["res://.godot/imported/flowers.glb-69ceb54e0caf5960db7789d464ef993a.scn"]
 
 [params]

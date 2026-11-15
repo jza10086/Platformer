@@ -8,7 +8,7 @@ path="res://.godot/imported/hedge.glb-2b3e786df4bc6aebddadcd651b1aad68.scn"
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/hedge.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/hedge.glb"
 dest_files=["res://.godot/imported/hedge.glb-2b3e786df4bc6aebddadcd651b1aad68.scn"]
 
 [params]

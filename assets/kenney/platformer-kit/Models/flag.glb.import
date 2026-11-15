@@ -8,7 +8,7 @@ path="res://.godot/imported/flag.glb-4d4878cebb63b1cbe19fa4ad078ba846.scn"
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/flag.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/flag.glb"
 dest_files=["res://.godot/imported/flag.glb-4d4878cebb63b1cbe19fa4ad078ba846.scn"]
 
 [params]

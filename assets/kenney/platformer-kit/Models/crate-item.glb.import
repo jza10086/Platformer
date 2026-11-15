@@ -8,7 +8,7 @@ path="res://.godot/imported/crate-item.glb-5275e9683ce8a5aeff5dd93dd2fc8f41.scn"
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/crate-item.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/crate-item.glb"
 dest_files=["res://.godot/imported/crate-item.glb-5275e9683ce8a5aeff5dd93dd2fc8f41.scn"]
 
 [params]

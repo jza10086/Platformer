@@ -11,7 +11,7 @@ metadata={
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/Textures/colormap.png"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/Textures/colormap.png"
 dest_files=["res://.godot/imported/colormap.png-204e95215a6361c1835e63aac39f1b9f.s3tc.ctex"]
 
 [params]

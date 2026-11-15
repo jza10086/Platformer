@@ -8,7 +8,7 @@ path="res://.godot/imported/mushroom-single.glb-bfb0478cb7f1c4a84f16f53f5729311f
 
 [deps]
 
-source_file="res://games/minigame/gp_platformer/assets/kenney/platformer-kit/Models/mushroom-single.glb"
+source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/mushroom-single.glb"
 dest_files=["res://.godot/imported/mushroom-single.glb-bfb0478cb7f1c4a84f16f53f5729311f.scn"]
 
 [params]

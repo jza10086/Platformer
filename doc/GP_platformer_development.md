@@ -2,10 +2,10 @@
 
 来源：2026-11-07 架构审查及其最后实施记录。整理日期：2026-11-14。下列待办保留原状态；实施前核对本包源码与工作区，不以历史检查代替本次验收。
 
-[共享 G01–G03 任务](../../../protocols/godot_party_default_protocol/doc/godot_party_default_protocol_development.md) · [包说明](gp_platformer_guide.md)
+[共享 G01–G03 任务](../../../protocols/GP_default_protocol/doc/GP_default_protocol_development.md) · [包说明](GP_platformer_guide.md)
 
 
-包：`gp_platformer`。定位：[game.gd](../game.gd)、`scripts/world11.gd`、`scripts/world11_player.gd`、`scripts/sound.gd`。
+包：`GP_platformer`。定位：[game.gd](../game.gd)、`scripts/world11.gd`、`scripts/world11_player.gd`、`scripts/sound.gd`。
 
 - [ ] 移除水果分支和 IS_PLATFORM 开关，使用明确的 world/player 依赖；处理进度/排名发送返回值并清理连接。
 - [ ] 普通声音接作用域组件。保留当前课程场景、出生点和运行时敌人/拾取状态，不重新生成固定地图。
