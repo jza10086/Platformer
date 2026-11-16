@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cym51xusugkyd"
-path="res://.godot/imported/brick.glb-694391346c07e99468bf35e3cb07a04d.scn"
+path="res://.godot/imported/brick.glb-4e300a5cfc21163d685804ef4beb0ea2.scn"
 
 [deps]
 
 source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/brick.glb"
-dest_files=["res://.godot/imported/brick.glb-694391346c07e99468bf35e3cb07a04d.scn"]
+dest_files=["res://.godot/imported/brick.glb-4e300a5cfc21163d685804ef4beb0ea2.scn"]
 
 [params]
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://duxp81i7h41v5"
-path="res://.godot/imported/star.glb-620aa01b56ecf5a2f3a65fc6b69bbba8.scn"
+path="res://.godot/imported/star.glb-54cf2464ba4d79fb6487409f9444ba16.scn"
 
 [deps]
 
 source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/star.glb"
-dest_files=["res://.godot/imported/star.glb-620aa01b56ecf5a2f3a65fc6b69bbba8.scn"]
+dest_files=["res://.godot/imported/star.glb-54cf2464ba4d79fb6487409f9444ba16.scn"]
 
 [params]
 

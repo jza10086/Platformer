@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://ooqnkfgpgffc"
-path="res://.godot/imported/tree-pine-small.glb-1f9b10a71239ffd2473152566eabd532.scn"
+path="res://.godot/imported/tree-pine-small.glb-d8fc131035d3d8657566ed5377603d83.scn"
 
 [deps]
 
 source_file="res://games/minigame/GP_platformer/assets/kenney/platformer-kit/Models/tree-pine-small.glb"
-dest_files=["res://.godot/imported/tree-pine-small.glb-1f9b10a71239ffd2473152566eabd532.scn"]
+dest_files=["res://.godot/imported/tree-pine-small.glb-d8fc131035d3d8657566ed5377603d83.scn"]
 
 [params]
 
