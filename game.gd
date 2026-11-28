@@ -20,9 +20,7 @@ var _sent_won: bool = false
 var _published_records: Dictionary = {}
 var _display_records: Dictionary = {}
 var records: Dictionary = {}
-const StandingRow: PackedScene = preload("res://games/assets/GP_default_ui/standing_row.tscn")
-var score_rows: Dictionary[String, Label] = {}
-@onready var summary: VBoxContainer = $ChallengeHUD/Status/Rankings
+@onready var leaderboard: PartyMiniLeaderboard = $ChallengeHUD/Status/MiniLeaderboard
 @onready var round_label: Label = $ChallengeHUD/Status/RoundClock
 var sequence: int = 0
 
@@ -57,11 +55,7 @@ func _ready() -> void:
 		game.menu.hide()
 		game.hud.get_node("Pause").hide()
 		game.fx.reduced_motion = bool(api.config.get_own(&"reduced_motion", false))
-	for player: Dictionary in players:
-		var row: Label = StandingRow.instantiate()
-		summary.add_child(row)
-		score_rows[player.player_id] = row
-		row.text = player.name
+	_refresh_leaderboard()
 	round_label.text = "等待所有玩家准备完成"
 	assert(pages != null, "Assign ProtocolPages in the game scene")
 	var ready_error: Error = pages.prepare(self, api, request, _start_gameplay)
@@ -196,11 +190,36 @@ func _show_standings(value: Dictionary) -> void:
 		if not id is String or not records.has(id) or not row is Dictionary or not row.get("score") is int or row.score < 0 or not row.get("won") is bool or not row.get("done") is bool or not row.get("withdrawn") is bool:
 			return
 		_display_records[id] = row
+	_refresh_leaderboard()
+
+
+func _refresh_leaderboard() -> void:
+	var entries: Array[Dictionary] = []
 	for player: Dictionary in players:
-		var row: Dictionary = _display_records.get(player.player_id, {})
-		var caption: String = api.i18n.text(&"hud.player", {"player": player.name, "score": row.get("score", 0), "state": "已退出" if row.get("withdrawn", false) else ("已完成" if row.get("done", false) else "挑战中")})
-		if score_rows[player.player_id].text != caption:
-			score_rows[player.player_id].text = caption
+		var id: String = player.player_id
+		var row: Dictionary = _display_records.get(id, {})
+		var withdrawn: bool = bool(row.get("withdrawn", not player.connected))
+		entries.append({
+			"rank": 0,
+			"name": player.name,
+			"score": int(row.get("score", 0)),
+			"color": api.get_appearance(id).get("color"),
+			"is_self": id == local_id,
+			"connected": not withdrawn,
+		})
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if a.connected != b.connected:
+			return a.connected
+		return int(a.score) > int(b.score))
+	for index: int in entries.size():
+		if not entries[index].connected:
+			continue
+		var rank_value: int = 1
+		for other: Dictionary in entries:
+			if other.connected and int(other.score) > int(entries[index].score):
+				rank_value += 1
+		entries[index].rank = rank_value
+	leaderboard.set_entries(entries)
 
 func _finish() -> void:
 	running = false
